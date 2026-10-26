@@ -2,13 +2,32 @@
 <style>body{margin:0;background:#12200f;color:#fff;font:15px system-ui;overflow:hidden}#w{position:absolute;left:0;top:0;width:1080px;height:608px;transform-origin:0 0}
 #hud{position:absolute;top:8px;left:10px;z-index:200;display:flex;align-items:center;gap:6px;padding:6px 10px;background:linear-gradient(#7a4a22,#5a3416);border:3px solid #3a2210;border-radius:12px;box-shadow:0 3px 8px #0008}#cb{display:flex;flex-direction:column;align-items:center;background:#f5e6a8;border:2px solid #3a2210;border-radius:10px;padding:2px 8px;min-width:58px;color:#222}#cb b{font-size:20px}#ic{font-size:24px}#t{margin:0 6px 0 10px;color:#fff2c0;font-weight:bold;font-size:18px;text-shadow:0 2px 2px #000}
 .k.p,.cardb{position:relative;width:70px;height:88px;padding:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:linear-gradient(#eef7da,#b6d98c);border:2px solid #4b6b2a;color:#222;overflow:hidden}.k.p img,.cardb img{max-width:54px;max-height:52px}.k.p small,.cardb small{font-weight:bold;font-size:13px;background:#f5e6a8;border-radius:8px;padding:0 6px}.cardb{width:84px;height:106px}.cardb em{font-size:11px;font-style:normal}.cd{position:absolute;left:0;top:0;width:100%;height:0;background:#0008}.cardb.on{opacity:.3}.k.p:disabled{filter:grayscale(.8) brightness(.8)}.slot{width:84px;height:106px;border:2px dashed #fff6;border-radius:8px}#sl,#pg{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:860px}#sl{min-height:110px;padding:8px;background:#0006;border-radius:12px}#pt{font-size:34px;margin:0;color:#ffe27a;text-shadow:0 3px 3px #000}#pn{color:#fff}#rd{font-size:26px;padding:10px 40px;background:#3c9a2c;border:3px solid #1f5a14;border-radius:14px;text-shadow:0 2px 2px #000}#bd{position:relative;width:1080px;height:608px;overflow:hidden;background:url(assets/lawn.jpg) 0 0/1080px 608px}
-#pk{position:absolute;inset:0;background:#12200ff2;z-index:98;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}#hp{position:fixed;inset:0;background:#000b;z-index:120;display:none;align-items:center;justify-content:center;gap:10px;padding:10px;box-sizing:border-box}#hp img{height:min(60vh,330px)}#bub{background:#fff;color:#222;border-radius:18px;padding:16px 20px;max-width:420px;font-size:17px;line-height:1.4;position:relative}#bub:before{content:"";position:absolute;left:-14px;top:40px;border:10px solid transparent;border-right-color:#fff}#bub .b{display:flex;gap:6px;justify-content:space-between;align-items:center;margin-top:12px;font-size:13px;color:#666}.c{position:absolute;width:81px;height:101.25px}.c:hover{background:#fff3}.e{position:absolute}button,input{font:inherit;padding:6px 12px;margin:3px;border-radius:6px;border:0}
+#pk{position:absolute;inset:0;background:#12200ff2;z-index:98;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}#hp{position:fixed;inset:0;background:#000b;z-index:120;display:none;align-items:center;justify-content:center;gap:10px;padding:10px;box-sizing:border-box}#bub{background:#fff;color:#222;border-radius:18px;padding:16px 20px;max-width:420px;font-size:17px;line-height:1.4;position:relative}#bub:before{content:"";position:absolute;left:-14px;top:40px;border:10px solid transparent;border-right-color:#fff}#bub .b{display:flex;gap:6px;justify-content:space-between;align-items:center;margin-top:12px;font-size:13px;color:#666}#cv{position:absolute;left:0;top:0;z-index:1}#hp canvas{height:min(60vh,360px)}.c{z-index:5;position:absolute;width:81px;height:101.25px}.c:hover{background:#fff3}.e{position:absolute}button,input{font:inherit;padding:6px 12px;margin:3px;border-radius:6px;border:0}
 .k{background:#2f6b2a;color:#fff;cursor:pointer}.k.s{outline:3px solid #ff0}.k:disabled{opacity:.4}
-#lob{position:absolute;inset:0;background:linear-gradient(#000a,#000c),url(assets/lawn.jpg) center/cover;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}</style>
-<button class=k id=mu style="position:fixed;right:6px;top:6px;z-index:100">🔊</button><div id=lob><h1>Plants vs. Zombies Versus</h1><div><button class=k id=h>Host (play Plants)</button> or <input id=code placeholder="room code" size=6><button class=k id=j>Join (play Zombies)</button></div><div><button class=k id=hb>❓ Help</button></div><div id=st></div></div>
+#lob{position:absolute;inset:0;background:linear-gradient(#000a,#000c),url(assets/lawn.jpg) center/cover;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}
+#lob{flex-direction:row;gap:70px;flex-wrap:wrap}
+.logo{font:900 58px/1 Georgia,serif;color:#7ed957;-webkit-text-stroke:3px #1d4a12;text-shadow:0 6px 0 #11300b;margin:0;text-align:left}
+.logo small{font-size:32px;color:#ffe27a;-webkit-text-stroke:2px #5a3a00}.logo span{display:inline-block;margin-top:10px;font-size:34px;color:#ff9a3c;-webkit-text-stroke:2px #5a2a00;letter-spacing:8px}
+#tomb{background:linear-gradient(#97a0ab,#5a616b);border:5px solid #3a4048;border-radius:110px 110px 14px 14px;padding:50px 34px 26px;display:flex;flex-direction:column;gap:10px;width:260px;box-shadow:0 10px 24px #000b,inset 0 0 22px #0006}
+#tomb .k{background:linear-gradient(#6c737d,#4a5059);border:3px solid #2e3339;color:#eef1f5;text-shadow:0 2px 0 #1c2025;font-weight:900;letter-spacing:1px;text-transform:uppercase;font-size:18px;padding:8px}
+#tomb .k small{font-size:11px;font-weight:700;color:#cfd6de;letter-spacing:2px}#tomb .k:hover{filter:brightness(1.2)}
+#tomb input{text-align:center;text-transform:uppercase;font-weight:bold;letter-spacing:3px;background:#d9dde2;border:3px solid #2e3339}#st{color:#ffe9a8;font-size:13px;min-height:16px}
+#hud{background:linear-gradient(#8a5629,#5b3516 60%,#4a2b11);border:3px solid #2e1a0a;box-shadow:0 4px 10px #000a,inset 0 2px 0 #b57a42}
+.sunic{display:inline-block;width:30px;height:30px;border-radius:50%;background:radial-gradient(#fffbc4 20%,#ffd21f 60%,#e08a00);box-shadow:0 0 10px #ffd21f}
+.k.sv{width:62px;height:88px;background:linear-gradient(#a56a36,#6a3f1c);border:2px solid #2e1a0a;padding:0}
+.k.p{box-shadow:0 2px 3px #0008}.k.p:not(:disabled):hover{filter:brightness(1.1)}
+#pk{background:linear-gradient(#000a,#000c),url(assets/lawn.jpg) center/cover}
+#pg{background:linear-gradient(#4a2a12,#341c0b);border:5px solid #8a5629;border-radius:16px;padding:16px;box-shadow:inset 0 0 22px #000,0 8px 20px #000a;width:720px}
+#sl{background:linear-gradient(#8a5629,#5b3516);border:3px solid #2e1a0a;border-radius:12px}
+#pb{position:absolute;right:16px;bottom:12px;width:230px;height:18px;border:3px solid #2e1a0a;border-radius:10px;background:#2a170a;z-index:200;overflow:hidden}
+#pf{height:100%;width:0;background:linear-gradient(#9be56a,#3f9a2a)}
+</style>
+<button class=k id=mu style="position:fixed;right:6px;top:6px;z-index:100">🔊</button><div id=lob><h1 class=logo>Plants <small>vs.</small> Zombies<br><span>VERSUS</span></h1>
+<div id=tomb><button class=k id=h>Host Game<br><small>play Plants</small></button><input id=code placeholder="ROOM CODE" size=8><button class=k id=j>Join Game<br><small>play Zombies</small></button><button class=k id=hb>❓ Help</button><div id=st></div></div></div>
 <div id=pk><h2 id=pt></h2><div id=sl></div><div id=pg></div><div id=pn></div><button class=k id=rd>Let's Rock!</button></div>
-<div id=w><div id=hud></div><div id=bd></div></div>
-<div id=hp><img src="assets/dave.gif" alt="Crazy Dave"><div id=bub><div id=ht></div><div class=b><button class=k id=hb2>Back</button><span id=hn></span><button class=k id=hf>Next</button><button class=k id=hx>Close</button></div></div></div>
+<div id=w><div id=hud></div><div id=pb><div id=pf></div></div><div id=bd><canvas id=cv width=1080 height=608></canvas></div></div>
+<div id=hp><canvas id=dv width=300 height=430></canvas><div id=bub><div id=ht></div><div class=b><button class=k id=hb2>Back</button><span id=hn></span><button class=k id=hf>Next</button><button class=k id=hx>Close</button></div></div></div>
+<script src="assets/anim.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
 <script>
 const $=i=>document.getElementById(i),CW=81,RH=101.25,OX=108,OY=90;
@@ -29,6 +48,7 @@ function zin(t,r,c){if(S.over||!ZD[t]||S.br<ZD[t][1]||S.cd['z'+t]>0)return;
  if(t==6){if(!(c>=0&&c<9&&free(c,r)))return;S.gs.push({id:++S.id,c,r,hp:150,tm:8})}
  else{S.zs.push({id:++S.id,t,x:10.2,r,hp:ZD[t][2]});ev('groan')}S.br-=ZD[t][1];S.cd['z'+t]=ZD[t][5]}
 function cell(c,r){if(S.over)return;if(role=='g'){if(sel>=0)conn.send({z:sel,r,c});return}
+ if(sel==-2){let i=S.pl.findIndex(p=>p.c==c&&p.r==r);if(i>=0){S.pl.splice(i,1);ev('plant')}sel=-1;return}
  if(sel<0||!free(c,r)||S.sun<PD[sel][1]||S.cd[sel]>0)return;S.sun-=PD[sel][1];S.cd[sel]=PD[sel][4];
  S.pl.push({id:++S.id,t:sel,c,r,hp:PD[sel][2],tm:PD[sel][5]=='bomb'?1:PD[sel][5]=='sun'?4:0});ev('plant')}
 const pk=(k,c,r)=>S.su.push({id:++S.id,k,x:OX+(c+.5)*CW,y:OY+r*RH+34,ty:OY+r*RH+34,a:0});
@@ -39,27 +59,31 @@ function tick(dt){S.t+=dt;S.br+=3*dt;S.sk-=dt;if(S.sk<=0){S.sk=6;S.su.push({id:+
  S.pl.forEach(p=>{p.tm-=dt;if(p.tm>0)return;let k=PD[p.t][5],zr=S.zs.filter(z=>z.r==p.r);
   if(k=='sun'){p.tm=8;pk('sun',p.c,p.r)}
   else if(k=='pea'||k=='snow'||k=='rep'||k=='puff'){if(zr.some(z=>z.x>p.c&&z.x<p.c+(k=='puff'?3.5:99))){p.tm=1.4;shoot(p,k)}}
-  else if(k=='bomb'){S.zs.forEach(z=>{if(Math.abs(z.r-p.r)<=1&&Math.abs(z.x-p.c)<=1.6)z.hp-=300});S.gs.forEach(g=>{if(Math.abs(g.r-p.r)<=1&&Math.abs(g.c-p.c)<=1)g.hp=0});p.hp=0;ev('cherrybomb')}
+  else if(k=='bomb'){S.zs.forEach(z=>{if(Math.abs(z.r-p.r)<=1&&Math.abs(z.x-p.c)<=1.6)z.hp-=300});S.gs.forEach(g=>{if(Math.abs(g.r-p.r)<=1&&Math.abs(g.c-p.c)<=1)g.hp=0});p.hp=0;S.fx.push({id:++S.id,k:'cb',an:'explode',x:OX+(p.c+.5)*CW,y:OY+(p.r+1)*RH-8,r:p.r,a:0});ev('cherrybomb')}
   else if(k=='chomp'){let z=zr.find(z=>z.x>p.c&&z.x<p.c+1.4);if(z){z.hp=0;p.tm=12;ev('chomp')}}
   else if(k=='squash'){let z=zr.find(z=>z.x>p.c-.3&&z.x<p.c+1.5);if(z){zr.forEach(y=>{if(Math.abs(y.x-z.x)<1)y.hp=0});p.hp=0;ev('splat')}}});
  S.ps.forEach(q=>{q.x+=5*dt;if(q.m&&q.x>q.m)q.x=99;let z=S.zs.find(z=>z.r==q.r&&Math.abs(z.x-q.x)<.4);if(z){z.hp-=q.d;if(q.s)z.sl=3;q.x=99;ev('splat')}});S.ps=S.ps.filter(q=>q.x<10);
  S.zs.forEach(z=>{z.sl=Math.max(0,(z.sl||0)-dt);let p=S.pl.find(p=>p.r==z.r&&p.c<z.x&&p.c+.75>z.x-.1);
   if(p){if(z.t==5&&!z.jd){z.jd=1;z.x=p.c-.3;ev('groan')}else{z.e=1;p.hp-=10*dt}}else{z.e=0;z.x-=ZD[z.t][3]*dt*(z.sl?.5:1)}if(z.x<0)S.over=2});
- S.pl=S.pl.filter(p=>p.hp>0);S.zs=S.zs.filter(z=>z.hp>0);S.gs=S.gs.filter(g=>g.hp>0);if(S.t>=300&&!S.over)S.over=1}
-function sp(key,src,sc,x,y,z){let e=els[key];if(!e){e=els[key]=document.createElement('img');e.className='e';e.onload=()=>e.style.width=e.naturalWidth*sc+'px';bd.appendChild(e)}
- if(e.dataset.s!=src){e.dataset.s=src;e.src=src}e.u=1;e.style.left=x-e.offsetWidth/2+'px';e.style.top=y-e.offsetHeight+'px';e.style.zIndex=z;return e}
-function draw(){for(let k in els)els[k].u=0;
- S.pl.forEach(p=>sp('p'+p.id,'assets/'+PD[p.t][3]+'.gif',.75,OX+(p.c+.5)*CW,OY+p.r*RH+RH-6,p.r*2));
- S.gs.forEach(g=>sp('g'+g.id,'assets/grave.png',1,OX+(g.c+.5)*CW,OY+g.r*RH+RH-6,g.r*2));
- S.zs.forEach(z=>sp('z'+z.id,`assets/z${z.t}${z.e?'e':'w'}.gif`,.66,OX+z.x*CW,OY+z.r*RH+RH-2,z.r*2+1));
- S.ps.forEach(q=>sp('q'+q.id,q.s?'assets/spea.png':'assets/pea.png',1.3,OX+q.x*CW,OY+q.r*RH+55,50));
- S.su.forEach(s=>{let b=s.k=='brain',e=sp('s'+s.id,b?'assets/brain.png':'assets/sun.gif',b?2:.7,s.x,s.y+30,60);e.style.cursor='pointer';e.onclick=()=>{if(b){if(role=='g'){conn.send({pk:s.id});snd('sun')}}else if(role=='h'){S.su=S.su.filter(o=>o.id!=s.id);S.sun+=25;snd('sun')}}});
- for(let k in els)if(!els[k].u){els[k].remove();delete els[k]}
- S.ev.forEach(snd);
- let h=role=='h',v=h?S.sun:Math.floor(S.br);$('v').textContent=Math.floor(v);$('t').textContent=Math.max(0,300-Math.floor(S.t))+'s';
+ S.pl=S.pl.filter(p=>p.hp>0);S.zs=S.zs.filter(z=>{if(z.hp>0)return 1;S.fx.push({id:++S.id,k:'z'+z.t,an:'death',x:OX+z.x*CW,y:OY+(z.r+1)*RH-4,r:z.r,a:0});return 0});S.fx.forEach(f=>f.a+=dt);S.fx=S.fx.filter(f=>f.a<(f.an=='death'?3.3:1.6));S.gs=S.gs.filter(g=>g.hp>0);if(S.t>=300&&!S.over)S.over=1}
+const K=1.5,IM=[],cx=$('cv').getContext('2d');for(let i=0;i<ANIMN;i++){let m=new Image();m.src='assets/p/'+i+'.png';IM.push(m)}
+const li=n=>{let m=new Image();m.src='assets/'+n;return m},HD={z0:li('zh.png'),z3:li('zfh.png'),z5:li('zph.png')},GR=li('grave.png'),BR=li('brain.png'),P1=li('pea.png'),P2=li('spea.png');
+function dr(c,k,an,t,x,y,sc,once){let u=ANIM[k],f=u.a[an],i=Math.floor(t*u.fps),F=f[once?Math.min(i,f.length-1):i%f.length];sc=sc||K;for(const l of F){let m=IM[l[0]];if(!m.naturalWidth)continue;c.globalAlpha=l[7];c.setTransform(l[1]*sc,l[2]*sc,l[3]*sc,l[4]*sc,x+(l[5]-u.ax)*sc,y+(l[6]-u.ay)*sc);c.drawImage(m,0,0)}c.setTransform(1,0,0,1,0,0);c.globalAlpha=1}
+bd.addEventListener('click',e=>{if(!S||S.over)return;let r=bd.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*1080,y=(e.clientY-r.top)/r.height*608,s=S.su.find(o=>Math.hypot(o.x-x,o.y-y)<34);
+ if(!s)return;e.stopPropagation();if(s.k=='brain'){if(role=='g'){conn.send({pk:s.id});snd('sun')}}else if(role=='h'){S.su=S.su.filter(o=>o.id!=s.id);S.sun+=25;snd('sun')}},true);
+function draw(){let t=performance.now()/1e3;cx.clearRect(0,0,1080,608);let L=[];
+ S.gs.forEach(g=>L.push([g.r*2,()=>cx.drawImage(GR,OX+(g.c+.5)*CW-36,OY+(g.r+1)*RH-GR.height*1.2-4,72,GR.height*1.2)]));
+ S.pl.forEach(p=>{let k=PD[p.t][3],an=k=='wn'?(p.hp>200?'idle1':p.hp>100?'idle2':'idle3'):'idle';L.push([p.r*2,()=>dr(cx,k,an,t+p.id*.37,OX+(p.c+.5)*CW,OY+(p.r+1)*RH-8)])});
+ S.zs.forEach(z=>{let k='z'+z.t,an=z.e?'eat':z.t==5&&!z.jd?'run':'walk';L.push([z.r*2+1,()=>dr(cx,k,an,t+z.id*.3,OX+z.x*CW,OY+(z.r+1)*RH-4)])});
+ S.fx.forEach(f=>{L.push([f.r*2+1,()=>dr(cx,f.k,f.an,f.a,f.x,f.y,K,1)]);
+  if(f.an=='death'){let a=Math.min(f.a,.7)/.7,h=HD[f.k]||HD.z0,w=h.naturalWidth*K,q=h.naturalHeight*K;L.push([f.r*2+2,()=>{cx.save();cx.translate(f.x-6-a*16,f.y-92+a*a*80);cx.rotate(-a*1.8);cx.drawImage(h,-w/2,-q/2,w,q);cx.restore()}])}});
+ S.ps.forEach(q=>L.push([50,()=>cx.drawImage(q.s?P2:P1,OX+q.x*CW-14,OY+q.r*RH+RH*.42,28,28)]));
+ L.sort((a,b)=>a[0]-b[0]);L.forEach(o=>o[1]());
+ S.su.forEach(q=>{if(q.k=='brain')cx.drawImage(BR,q.x-22,q.y-20+Math.sin(t*4+q.id)*3,44,42);else dr(cx,'sun','idle',t,q.x,q.y)});
+ let h=role=='h',v=h?S.sun:Math.floor(S.br);$('v').textContent=Math.floor(v);$('t').textContent=Math.max(0,300-Math.floor(S.t))+'s';$('pf').style.width=Math.min(100,S.t/3)+'%';if($('sv'))$('sv').className='k sv'+(sel==-2?' s':'');
  document.querySelectorAll('.k.p').forEach(b=>{let i=+b.dataset.i;b.disabled=(h?S.sun<PD[i][1]||S.cd[i]>0:S.br<ZD[i][1]||S.cd['z'+i]>0);b.className='k p'+(sel==i?' s':'');b.querySelector('.cd').style.height=Math.min(100,100*(h?S.cd[i]/PD[i][4]:S.cd['z'+i]/ZD[i][5])||0)+'%'});
- if(S.over){mus('menu');$('lob').style.display='flex';$('lob').innerHTML='<h1>'+(S.over==1?'Plants win!':'Zombies win!')+'</h1><button class=k onclick=location.reload()>Play again</button>'}}
-const cardH=(d,h)=>`<img src="assets/${h?d[3]+'.gif':(d[4]=='grave'?'grave.png':d[4]+'w.gif')}"><small>${d[1]}</small><i class=cd></i>`;
+ if(S.over){mus('menu');$('lob').style.display='flex';$('lob').innerHTML='<div><h1>'+(S.over==1?'Plants win!':'Zombies win!')+'</h1><button class=k onclick=location.reload()>Play again</button></div>'}}
+const cardH=(d,h)=>`<img src="assets/ico/${h?d[3]:d[4]}.png"><small>${d[1]}</small><i class=cd></i>`;
 function rend(){let h=role=='h';
  $('pg').innerHTML=pool.map((d,i)=>`<button class="k cardb${pick.includes(i)?' on':''}" data-i=${i}>${cardH(d,h)}<em>${d[0]}</em></button>`).join('');
  $('sl').innerHTML=[0,1,2,3,4].map(k=>pick[k]!=null?`<button class="k cardb" data-r=${k}>${cardH(pool[pick[k]],h)}<em>${pool[pick[k]][0]}</em></button>`:'<div class=slot></div>').join('');
@@ -69,12 +93,12 @@ function choose(){$('lob').style.display='none';$('pk').style.display='flex';poo
  $('pt').textContent=role=='h'?'Choose your plants':'Choose your zombies';rend();
  $('rd').onclick=()=>{if(!pick.length||rdy)return;rdy=1;$('rd').textContent='Waiting for opponent…';if(role=='g')conn.send({rd:1});else if(orr)start()}}
 function start(){mus('lawn');$('lob').style.display='none';$('pk').style.display='none';let h=role=='h',P=h?PD:ZD;
- $('hud').innerHTML=`<div id=cb><span id=ic>${h?'☀':'🧠'}</span><b id=v>0</b></div>`+pick.map(i=>`<button class="k p" data-i=${i}>${cardH(P[i],h)}</button>`).join('')+'<span id=t></span>';
- document.querySelectorAll('.k.p').forEach(b=>b.onclick=()=>sel=+b.dataset.i);
- if(h){S={t:0,sun:150,br:100,pl:[],zs:[],ps:[],su:[],gs:[],id:0,sk:2,over:0,cd:{},ev:[]};let last=performance.now(),ls=0;
+ $('hud').innerHTML=`<div id=cb><span id=ic>${h?'<i class=sunic></i>':'🧠'}</span><b id=v>0</b></div>`+pick.map(i=>`<button class="k p" data-i=${i}>${cardH(P[i],h)}</button>`).join('')+(h?'<button class="k sv" id=sv title="Shovel"><svg width=40 height=60 viewBox="0 0 40 60"><rect x=17 y=2 width=6 height=30 rx=3 fill=#c9965a stroke=#4a2b11 transform="rotate(-18 20 30)"/><path d="M6 36 L30 30 L34 52 L12 56 Z" fill=#b9c1ca stroke=#454b53 stroke-width=2 transform="rotate(-18 20 40)"/></svg></button>':'')+'<span id=t></span>';
+ document.querySelectorAll('.k.p').forEach(b=>b.onclick=()=>sel=+b.dataset.i);if(h)$('sv').onclick=()=>sel=-2;
+ if(!h)(function G(){draw();requestAnimationFrame(G)})();if(h){S={t:0,sun:150,br:100,pl:[],zs:[],ps:[],su:[],gs:[],id:0,sk:2,over:0,cd:{},ev:[],fx:[]};let last=performance.now(),ls=0;
   (function L(n){tick(Math.min(.1,(n-last)/1e3));last=n;draw();if(n-ls>50||S.over){ls=n;conn.send({s:S});S.ev=[]}requestAnimationFrame(L)})(last)}}
-function setup(c){conn=c;c.on('data',d=>{if(role=='h'){if(d.rd){orr=1;if(rdy)start()}else if(d.z!=null&&S)zin(d.z,d.r,d.c);else if(d.pk!=null&&S){let q=S.su.find(o=>o.id==d.pk&&o.k=='brain');if(q){S.su=S.su.filter(o=>o!=q);S.br+=25;ev('sun')}}}else if(d.s){S=d.s;if(!$('v'))start();draw()}});
- c.on('close',()=>{$('pk').style.display='none';$('lob').style.display='flex';$('lob').innerHTML='<h1>Opponent left</h1><button class=k onclick=location.reload()>Back</button>'});
+function setup(c){conn=c;c.on('data',d=>{if(role=='h'){if(d.rd){orr=1;if(rdy)start()}else if(d.z!=null&&S)zin(d.z,d.r,d.c);else if(d.pk!=null&&S){let q=S.su.find(o=>o.id==d.pk&&o.k=='brain');if(q){S.su=S.su.filter(o=>o!=q);S.br+=25;ev('sun')}}}else if(d.s){S=d.s;S.ev.forEach(snd);if(!$('v'))start()}});
+ c.on('close',()=>{$('pk').style.display='none';$('lob').style.display='flex';$('lob').innerHTML='<div><h1>Opponent left</h1><button class=k onclick=location.reload()>Back</button></div>'});
  c.open?choose():c.on('open',choose)}
 $('h').onclick=()=>{mus('seed');role='h';let id=Math.random().toString(36).slice(2,6),p=new Peer('pvzvs-'+id);p.on('open',()=>$('st').textContent='Room code: '+id+' — give it to your opponent and wait…');p.on('connection',setup);p.on('error',e=>$('st').textContent='Error: '+e.type)};
 $('j').onclick=()=>{mus('seed');role='g';$('st').textContent='Connecting…';let p=new Peer();p.on('open',()=>setup(p.connect('pvzvs-'+$('code').value.trim().toLowerCase())));p.on('error',e=>$('st').textContent='Error: '+e.type)};
@@ -83,11 +107,12 @@ const HP=["Howdy, neighbor! I'm Crazy Dave. This is a two-player fight: one of y
 "The goal: the plant player must hold out for 5 minutes. The zombie player wins by getting any zombie across the lawn and into the house!",
 "Plant player: click falling sun to collect it. Pick a seed from the top bar, then click a lawn tile to plant it. Sunflowers pop out extra sun for you to click, and every seed needs a moment to recharge.",
 "Zombie player: you earn brains over time. Pick a zombie, then click the row where you want it to walk in. Gravestones are your sunflowers! Put them on any free tile and they pop out brains - click the brains to collect them!",
-"Plant tips: Cherry Bombs blast zombies - and gravestones! A Chomper eats one zombie and then needs a long rest. Squash flattens whatever walks up. Puff-shrooms are free but short range. Wall-nuts stall zombies. Snow Peas slow them down.",
+"Plant tips: Cherry Bombs blast zombies - and gravestones! A Chomper eats one zombie and then needs a long rest. Squash flattens whatever walks up. Puff-shrooms are free but short range. Wall-nuts stall zombies. Snow Peas slow them down. Use the shovel to dig up a plant you don't want.",
 "Zombie tips: Pole Vaulters hop over the first plant. Footballs are fast and tough. Buckets soak up peas. Rush one lane while the plants are busy, and keep a few gravestones going for brains!",
 "Before the match you each pick up to 5 seeds, then hit Ready. Share your room code with a friend to play online. The match keeps running while you read this, so be quick, neighbor!",
 "That's it! Go protect your brains... or go eat them! You can open me again any time with the Help button."];
-let hi=0;const help=o=>{$('hp').style.display=o?'flex':'none';if(o){hi=0;page()}};
+let hi=0,dvx=$('dv').getContext('2d');(function D(){if($('hp').style.display=='flex'){dvx.clearRect(0,0,300,430);dr(dvx,'dave','talk',performance.now()/1e3,150,420,.95)}requestAnimationFrame(D)})();
+const help=o=>{$('hp').style.display=o?'flex':'none';if(o){hi=0;page()}};
 function page(){$('ht').textContent=HP[hi];$('hn').textContent=(hi+1)+'/'+HP.length;$('hb2').style.visibility=hi?'visible':'hidden';$('hf').textContent=hi==HP.length-1?'Done':'Next';
  if(!mute){let a=new Audio('assets/dave'+(1+Math.floor(Math.random()*3))+'.mp3');a.volume=.6;a.play().catch(()=>{})}}
 $('hb').onclick=()=>help(1);$('hx').onclick=()=>help(0);$('hb2').onclick=()=>{hi--;page()};$('hf').onclick=()=>{if(hi==HP.length-1)help(0);else{hi++;page()}};

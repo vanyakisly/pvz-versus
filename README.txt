@@ -7,3 +7,6 @@ Plants: Sunflower, Peashooter, Wall-nut, Snow Pea, Cherry Bomb, Repeater, Chompe
 Zombies: Zombie, Conehead, Buckethead, Football, Newspaper, Pole Vaulter, Gravestone (the zombies' "sunflower": makes 25 brains every 8s; placed on any free tile; they pop out brains that you click to collect (auto-collected after 6s)).
 Help button (on the lobby screen only): Crazy Dave explains the rules in a speech bubble.
 Widescreen 16:9 board using the real day-lawn background; own-style HUD and seed chooser screen.
+Characters are animated live on a canvas from the game's animation data + sprite parts (assets/anim.js, assets/p/); no GIFs.
+Zombies play their death animation (head pops off); Cherry Bomb plays its explosion animation.
+UI: own-style wooden seed bar (sun/brain counter, packets with recharge + unaffordable states, shovel for plants), "Choose your seeds" panel with Let's Rock!, tombstone-style main menu, progress bar.
