@@ -1,0 +1,92 @@
+<!DOCTYPE html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>PvZ Versus</title>
+<style>body{margin:0;background:#12200f;color:#fff;font:15px system-ui;overflow:hidden}#w{position:absolute;left:0;top:0;width:810px;transform-origin:0 0}
+#hud{height:58px;display:flex;align-items:center;gap:6px;padding:0 6px;background:#2a1a0a}#bd{position:relative;width:810px;height:608px;overflow:hidden;background:url(assets/lawn.jpg) 0 0/810px 608px}
+#pk{position:absolute;inset:0;background:#12200ff2;z-index:98;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}#hp{position:fixed;inset:0;background:#000b;z-index:120;display:none;align-items:center;justify-content:center;gap:10px;padding:10px;box-sizing:border-box}#hp img{height:min(60vh,330px)}#bub{background:#fff;color:#222;border-radius:18px;padding:16px 20px;max-width:420px;font-size:17px;line-height:1.4;position:relative}#bub:before{content:"";position:absolute;left:-14px;top:40px;border:10px solid transparent;border-right-color:#fff}#bub .b{display:flex;gap:6px;justify-content:space-between;align-items:center;margin-top:12px;font-size:13px;color:#666}.c{position:absolute;width:81px;height:101.25px}.c:hover{background:#fff3}.e{position:absolute}button,input{font:inherit;padding:6px 12px;margin:3px;border-radius:6px;border:0}
+.k{background:#2f6b2a;color:#fff;cursor:pointer}.k.s{outline:3px solid #ff0}.k:disabled{opacity:.4}
+#lob{position:absolute;inset:0;background:#12200fee;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}</style>
+<button class=k id=mu style="position:fixed;right:6px;top:6px;z-index:100">🔊</button><div id=lob><h1>Plants vs. Zombies Versus</h1><div><button class=k id=h>Host (play Plants)</button> or <input id=code placeholder="room code" size=6><button class=k id=j>Join (play Zombies)</button></div><div><button class=k id=hb>❓ Help</button></div><div id=st></div></div>
+<div id=pk><h2 id=pt></h2><div id=pg></div><div id=pn></div><button class=k id=rd>Ready</button></div>
+<div id=w><div id=hud></div><div id=bd></div></div>
+<div id=hp><img src="assets/dave.gif" alt="Crazy Dave"><div id=bub><div id=ht></div><div class=b><button class=k id=hb2>Back</button><span id=hn></span><button class=k id=hf>Next</button><button class=k id=hx>Close</button></div></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
+<script>
+const $=i=>document.getElementById(i),CW=81,RH=101.25,OX=36,OY=90;
+// [name,cost,hp,img,cooldown,kind]
+const PD=[['Sunflower',50,30,'sf',5,'sun'],['Peashooter',100,30,'pe',5,'pea'],['Wall-nut',50,300,'wn',8,'wall'],['Snow Pea',175,30,'sp',5,'snow'],['Cherry Bomb',150,30,'cb',10,'bomb'],['Repeater',200,30,'rp',5,'rep'],['Chomper',150,30,'ch',7,'chomp'],['Squash',50,30,'sq',8,'squash'],['Puff-shroom',0,30,'pu',3,'puff']];
+// [name,cost,hp,speed,img,cooldown]  (index 6 = Gravestone, makes brains)
+const ZD=[['Zombie',50,20,.2,'z0',1],['Conehead',100,56,.2,'z1',1],['Buckethead',150,130,.2,'z2',2],['Football',200,120,.4,'z3',3],['Newspaper',75,40,.25,'z4',1],['Pole Vaulter',125,30,.5,'z5',2],['Gravestone',75,150,0,'grave',4]];
+let S,role,conn,sel=-1,els={},bd=$('bd'),pick=[],rdy=0,orr=0,pool;
+const fit=()=>$('w').style.transform='scale('+Math.min(innerWidth/810,innerHeight/666)+')';onresize=fit;fit();
+let mute=0,cur='',M={};['menu','seed','lawn'].forEach(n=>{M[n]=new Audio('assets/music_'+n+'.mp3');M[n].loop=true;M[n].volume=.35});
+const mus=n=>{if(cur==n)return;if(cur)M[cur].pause();cur=n;if(n){M[n].currentTime=0;M[n].muted=mute;M[n].play().catch(()=>{})}};
+$('mu').onclick=()=>{mute=!mute;$('mu').textContent=mute?'🔇':'🔊';for(let k in M)M[k].muted=mute};
+addEventListener('pointerdown',()=>{if(!cur)mus('menu')},{once:true});
+const snd=n=>{if(mute)return;let a=new Audio('assets/'+n+'.mp3');a.volume=.5;a.play().catch(()=>{})},ev=n=>{S.ev.push(n);snd(n)};
+for(let r=0;r<5;r++)for(let c=0;c<9;c++){let d=document.createElement('div');d.className='c';d.style.cssText=`left:${OX+c*CW}px;top:${OY+r*RH}px`;d.onclick=()=>cell(c,r);bd.appendChild(d)}
+const free=(c,r)=>!S.pl.some(p=>p.c==c&&p.r==r)&&!S.gs.some(g=>g.c==c&&g.r==r);
+function zin(t,r,c){if(S.over||!ZD[t]||S.br<ZD[t][1]||S.cd['z'+t]>0)return;
+ if(t==6){if(!(c>=0&&c<9&&free(c,r)))return;S.gs.push({id:++S.id,c,r,hp:150,tm:8})}
+ else{S.zs.push({id:++S.id,t,x:9.3,r,hp:ZD[t][2]});ev('groan')}S.br-=ZD[t][1];S.cd['z'+t]=ZD[t][5]}
+function cell(c,r){if(S.over)return;if(role=='g'){if(sel>=0)conn.send({z:sel,r,c});return}
+ if(sel<0||!free(c,r)||S.sun<PD[sel][1]||S.cd[sel]>0)return;S.sun-=PD[sel][1];S.cd[sel]=PD[sel][4];
+ S.pl.push({id:++S.id,t:sel,c,r,hp:PD[sel][2],tm:PD[sel][5]=='bomb'?1:PD[sel][5]=='sun'?4:0});ev('plant')}
+const pk=(k,c,r)=>S.su.push({id:++S.id,k,x:OX+(c+.5)*CW,y:OY+r*RH+34,ty:OY+r*RH+34,a:0});
+function shoot(p,k){let n=k=='rep'?2:1;for(let i=0;i<n;i++)S.ps.push({id:++S.id,x:p.c+.8-i*.5,r:p.r,s:k=='snow',d:k=='puff'?1:2,m:k=='puff'?p.c+3.8:0});ev('throw1')}
+function tick(dt){S.t+=dt;S.br+=3*dt;S.sk-=dt;if(S.sk<=0){S.sk=6;S.su.push({id:++S.id,x:OX+40+Math.random()*660,y:-20,ty:OY+Math.random()*400})}
+ S.su.forEach(s=>{s.y=Math.min(s.ty,s.y+80*dt);if(s.k){s.a+=dt;if(s.a>6){s.rm=1;if(s.k=='sun')S.sun+=25;else S.br+=25}}});S.su=S.su.filter(s=>!s.rm);for(let k in S.cd)S.cd[k]=Math.max(0,S.cd[k]-dt);
+ S.gs.forEach(g=>{g.tm-=dt;if(g.tm<=0){g.tm=8;pk('brain',g.c,g.r)}});
+ S.pl.forEach(p=>{p.tm-=dt;if(p.tm>0)return;let k=PD[p.t][5],zr=S.zs.filter(z=>z.r==p.r);
+  if(k=='sun'){p.tm=8;pk('sun',p.c,p.r)}
+  else if(k=='pea'||k=='snow'||k=='rep'||k=='puff'){if(zr.some(z=>z.x>p.c&&z.x<p.c+(k=='puff'?3.5:99))){p.tm=1.4;shoot(p,k)}}
+  else if(k=='bomb'){S.zs.forEach(z=>{if(Math.abs(z.r-p.r)<=1&&Math.abs(z.x-p.c)<=1.6)z.hp-=300});S.gs.forEach(g=>{if(Math.abs(g.r-p.r)<=1&&Math.abs(g.c-p.c)<=1)g.hp=0});p.hp=0;ev('cherrybomb')}
+  else if(k=='chomp'){let z=zr.find(z=>z.x>p.c&&z.x<p.c+1.4);if(z){z.hp=0;p.tm=12;ev('chomp')}}
+  else if(k=='squash'){let z=zr.find(z=>z.x>p.c-.3&&z.x<p.c+1.5);if(z){zr.forEach(y=>{if(Math.abs(y.x-z.x)<1)y.hp=0});p.hp=0;ev('splat')}}});
+ S.ps.forEach(q=>{q.x+=5*dt;if(q.m&&q.x>q.m)q.x=99;let z=S.zs.find(z=>z.r==q.r&&Math.abs(z.x-q.x)<.4);if(z){z.hp-=q.d;if(q.s)z.sl=3;q.x=99;ev('splat')}});S.ps=S.ps.filter(q=>q.x<10);
+ S.zs.forEach(z=>{z.sl=Math.max(0,(z.sl||0)-dt);let p=S.pl.find(p=>p.r==z.r&&p.c<z.x&&p.c+.75>z.x-.1);
+  if(p){if(z.t==5&&!z.jd){z.jd=1;z.x=p.c-.3;ev('groan')}else{z.e=1;p.hp-=10*dt}}else{z.e=0;z.x-=ZD[z.t][3]*dt*(z.sl?.5:1)}if(z.x<0)S.over=2});
+ S.pl=S.pl.filter(p=>p.hp>0);S.zs=S.zs.filter(z=>z.hp>0);S.gs=S.gs.filter(g=>g.hp>0);if(S.t>=300&&!S.over)S.over=1}
+function sp(key,src,sc,x,y,z){let e=els[key];if(!e){e=els[key]=document.createElement('img');e.className='e';e.onload=()=>e.style.width=e.naturalWidth*sc+'px';bd.appendChild(e)}
+ if(e.dataset.s!=src){e.dataset.s=src;e.src=src}e.u=1;e.style.left=x-e.offsetWidth/2+'px';e.style.top=y-e.offsetHeight+'px';e.style.zIndex=z;return e}
+function draw(){for(let k in els)els[k].u=0;
+ S.pl.forEach(p=>sp('p'+p.id,'assets/'+PD[p.t][3]+'.gif',.75,OX+(p.c+.5)*CW,OY+p.r*RH+RH-6,p.r*2));
+ S.gs.forEach(g=>sp('g'+g.id,'assets/grave.png',1,OX+(g.c+.5)*CW,OY+g.r*RH+RH-6,g.r*2));
+ S.zs.forEach(z=>sp('z'+z.id,`assets/z${z.t}${z.e?'e':'w'}.gif`,.66,OX+z.x*CW,OY+z.r*RH+RH-2,z.r*2+1));
+ S.ps.forEach(q=>sp('q'+q.id,q.s?'assets/spea.png':'assets/pea.png',1.3,OX+q.x*CW,OY+q.r*RH+55,50));
+ S.su.forEach(s=>{let b=s.k=='brain',e=sp('s'+s.id,b?'assets/brain.png':'assets/sun.gif',b?2:.7,s.x,s.y+30,60);e.style.cursor='pointer';e.onclick=()=>{if(b){if(role=='g'){conn.send({pk:s.id});snd('sun')}}else if(role=='h'){S.su=S.su.filter(o=>o.id!=s.id);S.sun+=25;snd('sun')}}});
+ for(let k in els)if(!els[k].u){els[k].remove();delete els[k]}
+ S.ev.forEach(snd);
+ let h=role=='h',v=h?S.sun:Math.floor(S.br);$('v').textContent=(h?'☀ ':'🧠 ')+Math.floor(v);$('t').textContent=Math.max(0,300-Math.floor(S.t))+'s';
+ document.querySelectorAll('.k.p').forEach(b=>{let i=+b.dataset.i;b.disabled=(h?S.sun<PD[i][1]||S.cd[i]>0:S.br<ZD[i][1]||S.cd['z'+i]>0);b.className='k p'+(sel==i?' s':'')});
+ if(S.over){mus('menu');$('lob').style.display='flex';$('lob').innerHTML='<h1>'+(S.over==1?'Plants win!':'Zombies win!')+'</h1><button class=k onclick=location.reload()>Play again</button>'}}
+function choose(){$('lob').style.display='none';$('pk').style.display='flex';pool=role=='h'?PD:ZD;
+ $('pt').textContent=role=='h'?'Choose up to 5 plants':'Choose up to 5 zombies (Gravestones make brains - place them anywhere!)';
+ $('pg').innerHTML=pool.map((d,i)=>`<button class=k data-i=${i}>${d[0]} (${d[1]})</button>`).join('');
+ $('pg').querySelectorAll('button').forEach(b=>b.onclick=()=>{let i=+b.dataset.i,k=pick.indexOf(i);if(k>=0)pick.splice(k,1);else if(pick.length<5)pick.push(i);
+  $('pg').querySelectorAll('button').forEach(x=>x.className='k'+(pick.includes(+x.dataset.i)?' s':''));$('pn').textContent=pick.length+'/5 selected'});
+ pick=[role=='h'?0:6];$('pg').querySelectorAll('button').forEach(x=>x.className='k'+(pick.includes(+x.dataset.i)?' s':''));$('pn').textContent='1/5 selected';
+ $('rd').onclick=()=>{if(!pick.length||rdy)return;rdy=1;$('rd').textContent='Waiting for opponent…';if(role=='g')conn.send({rd:1});else if(orr)start()}}
+function start(){mus('lawn');$('lob').style.display='none';$('pk').style.display='none';let h=role=='h',P=h?PD:ZD;
+ $('hud').innerHTML='<b id=v style="min-width:70px"></b>'+pick.map(i=>`<button class="k p" data-i=${i}>${P[i][0]} ${P[i][1]}</button>`).join('')+'<span style="margin-left:auto" id=t></span>';
+ document.querySelectorAll('.k.p').forEach(b=>b.onclick=()=>sel=+b.dataset.i);
+ if(h){S={t:0,sun:150,br:100,pl:[],zs:[],ps:[],su:[],gs:[],id:0,sk:2,over:0,cd:{},ev:[]};let last=performance.now(),ls=0;
+  (function L(n){tick(Math.min(.1,(n-last)/1e3));last=n;draw();if(n-ls>50||S.over){ls=n;conn.send({s:S});S.ev=[]}requestAnimationFrame(L)})(last)}}
+function setup(c){conn=c;c.on('data',d=>{if(role=='h'){if(d.rd){orr=1;if(rdy)start()}else if(d.z!=null&&S)zin(d.z,d.r,d.c);else if(d.pk!=null&&S){let q=S.su.find(o=>o.id==d.pk&&o.k=='brain');if(q){S.su=S.su.filter(o=>o!=q);S.br+=25;ev('sun')}}}else if(d.s){S=d.s;if(!$('v'))start();draw()}});
+ c.on('close',()=>{$('pk').style.display='none';$('lob').style.display='flex';$('lob').innerHTML='<h1>Opponent left</h1><button class=k onclick=location.reload()>Back</button>'});
+ c.open?choose():c.on('open',choose)}
+$('h').onclick=()=>{mus('seed');role='h';let id=Math.random().toString(36).slice(2,6),p=new Peer('pvzvs-'+id);p.on('open',()=>$('st').textContent='Room code: '+id+' — give it to your opponent and wait…');p.on('connection',setup);p.on('error',e=>$('st').textContent='Error: '+e.type)};
+$('j').onclick=()=>{mus('seed');role='g';$('st').textContent='Connecting…';let p=new Peer();p.on('open',()=>setup(p.connect('pvzvs-'+$('code').value.trim().toLowerCase())));p.on('error',e=>$('st').textContent='Error: '+e.type)};
+
+const HP=["Howdy, neighbor! I'm Crazy Dave. This is a two-player fight: one of you plants, the other one brings the zombies!",
+"The goal: the plant player must hold out for 5 minutes. The zombie player wins by getting any zombie across the lawn and into the house!",
+"Plant player: click falling sun to collect it. Pick a seed from the top bar, then click a lawn tile to plant it. Sunflowers pop out extra sun for you to click, and every seed needs a moment to recharge.",
+"Zombie player: you earn brains over time. Pick a zombie, then click the row where you want it to walk in. Gravestones are your sunflowers! Put them on any free tile and they pop out brains - click the brains to collect them!",
+"Plant tips: Cherry Bombs blast zombies - and gravestones! A Chomper eats one zombie and then needs a long rest. Squash flattens whatever walks up. Puff-shrooms are free but short range. Wall-nuts stall zombies. Snow Peas slow them down.",
+"Zombie tips: Pole Vaulters hop over the first plant. Footballs are fast and tough. Buckets soak up peas. Rush one lane while the plants are busy, and keep a few gravestones going for brains!",
+"Before the match you each pick up to 5 seeds, then hit Ready. Share your room code with a friend to play online. The match keeps running while you read this, so be quick, neighbor!",
+"That's it! Go protect your brains... or go eat them! You can open me again any time with the Help button."];
+let hi=0;const help=o=>{$('hp').style.display=o?'flex':'none';if(o){hi=0;page()}};
+function page(){$('ht').textContent=HP[hi];$('hn').textContent=(hi+1)+'/'+HP.length;$('hb2').style.visibility=hi?'visible':'hidden';$('hf').textContent=hi==HP.length-1?'Done':'Next';
+ if(!mute){let a=new Audio('assets/dave'+(1+Math.floor(Math.random()*3))+'.mp3');a.volume=.6;a.play().catch(()=>{})}}
+$('hb').onclick=()=>help(1);$('hx').onclick=()=>help(0);$('hb2').onclick=()=>{hi--;page()};$('hf').onclick=()=>{if(hi==HP.length-1)help(0);else{hi++;page()}};
+addEventListener('keydown',e=>{if(e.key=='Escape')help(0)});
+</script>
