@@ -62,28 +62,35 @@ function tick(dt){S.t+=dt;S.br+=3*dt;S.sk-=dt;if(S.sk<=0){S.sk=6;S.su.push({id:+
  S.gs.forEach(g=>{g.tm-=dt;if(g.tm<=0){g.tm=8;pk('brain',g.c,g.r)}});
  S.es=Math.max(0,(S.es||0)-dt);
  S.pl.forEach(p=>{if(PD[p.t][5]=='chomp'&&p.ph){p.pt-=dt;if(p.pt<=0){if(p.ph==1){p.ph=2;p.pt=28.3}else if(p.ph==2){p.ph=3;p.pt=.9;ev('gulp')}else p.ph=0}return}
+  if(PD[p.t][5]=='squash'&&p.ph){p.pt-=dt;let z=S.zs.find(o=>o.id==p.tz);if(z&&p.ph<4)p.tx=z.x;
+   if(p.pt<=0){if(p.ph==1){p.ph=2;p.pt=.5}else if(p.ph==2){p.ph=3;p.pt=.35}else if(p.ph==3){S.zs.forEach(y=>{if(y.r==p.r&&Math.abs(y.x-p.tx)<1.1)y.hp=0});ev('bonk');p.ph=4;p.pt=.7}else p.hp=0}return}
   p.tm-=dt;if(p.tm>0)return;let k=PD[p.t][5],zr=S.zs.filter(z=>z.r==p.r);
   if(k=='sun'){p.tm=8;pk('sun',p.c,p.r)}
   else if(k=='pea'||k=='snow'||k=='rep'||k=='puff'){if(zr.some(z=>z.x>p.c&&z.x<p.c+(k=='puff'?3.5:99))){p.tm=1.4;shoot(p,k)}}
   else if(k=='bomb'){S.zs.forEach(z=>{if(Math.abs(z.r-p.r)<=1&&Math.abs(z.x-p.c)<=1.6)hit(z,300)});S.gs.forEach(g=>{if(Math.abs(g.r-p.r)<=1&&Math.abs(g.c-p.c)<=1)g.hp=0});p.hp=0;S.fx.push({id:++S.id,k:'cb',an:'explode',x:OX+(p.c+.5)*CW,y:OY+(p.r+1)*RH-8,r:p.r,a:0});ev('cherrybomb')}
   else if(k=='chomp'){let z=zr.find(z=>z.x>p.c&&z.x<p.c+1.4);if(z){z.hp=0;z.nf=1;p.ph=1;p.pt=.8;ev('chomp')}}
-  else if(k=='squash'){let z=zr.find(z=>z.x>p.c-.3&&z.x<p.c+1.5);if(z){zr.forEach(y=>{if(Math.abs(y.x-z.x)<1)y.hp=0});p.hp=0;ev('splat')}}});
+  else if(k=='squash'){let z=zr.find(z=>Math.abs(z.x-(p.c+.5))<1.4);if(z){p.ph=1;p.pt=.5;p.tz=z.id;p.tx=z.x;ev('squash_hmm')}}});
  S.ps.forEach(q=>{q.x+=5*dt;if(q.m&&q.x>q.m)q.x=99;let z=S.zs.find(z=>z.r==q.r&&Math.abs(z.x-q.x)<.4);if(z){hit(z,q.d);if(q.s)z.sl=3;q.x=99}});S.ps=S.ps.filter(q=>q.x<10);
- S.zs.forEach(z=>{z.sl=Math.max(0,(z.sl||0)-dt);if(z.gs>0){z.gs-=dt;if(z.gs<=0)ev('newspaper_rarrgh');z.e=0;return}let p=S.pl.find(p=>p.r==z.r&&p.c<z.x&&p.c+.75>z.x-.1);
-  if(p){if(z.t==5&&!z.jd){z.jd=1;z.x=p.c-.3;ev('groan')}else{z.e=1;p.hp-=10*dt;if(S.es<=0){S.es=.45;ev('chompsoft')}}}else{z.e=0;z.x-=(z.t==4&&z.ah<=0?.65:ZD[z.t][3])*dt*(z.sl?.5:1)}if(z.x<0)S.over=2});
+ S.zs.forEach(z=>{z.sl=Math.max(0,(z.sl||0)-dt);z.ap=(z.ap||0)+dt*(z.sl>0?.5:1);if(z.gs>0){z.gs-=dt;if(z.gs<=0)ev('newspaper_rarrgh');z.e=0;return}let p=S.pl.find(p=>p.r==z.r&&p.c<z.x&&p.c+.75>z.x-.1);
+  if(p){if(z.t==5&&!z.jd){z.jd=1;z.x=p.c-.3;ev('groan')}else{z.e=1;p.hp-=10*dt*(z.sl>0?.5:1);if(S.es<=0){S.es=.45;ev('chompsoft')}}}else{z.e=0;z.x-=(z.t==4&&z.ah<=0?.65:ZD[z.t][3])*dt*(z.sl?.5:1)}if(z.x<0)S.over=2});
  S.pl=S.pl.filter(p=>p.hp>0);S.zs=S.zs.filter(z=>{if(z.hp>0)return 1;if(!z.nf)S.fx.push({id:++S.id,k:zu(z),t:z.t,an:'death',x:OX+z.x*CW,y:OY+(z.r+1)*RH-4,r:z.r,a:0});return 0});S.fx.forEach(f=>f.a+=dt);S.fx=S.fx.filter(f=>f.a<(f.an=='death'?3.3:f.an=='hat'?1.4:1.6));S.gs=S.gs.filter(g=>g.hp>0);if(S.t>=300&&!S.over)S.over=1}
 const K=1.5,cx=$('cv').getContext('2d');
 const li=n=>{let m=new Image();m.src='assets/'+n;return m},AT=li('atlas.png'),HT={hat_cone:li('hat_cone.png'),hat_bucket:li('hat_bucket.png'),hat_helmet:li('hat_helmet.png'),hat_paper:li('hat_paper.png')},HD={z0:li('zh.png'),z3:li('zfh.png'),z5:li('zph.png')},GR=li('grave.png'),BR=li('brain.png'),P1=li('pea.png'),P2=li('spea.png');
+const tcv=document.createElement('canvas');tcv.width=340;tcv.height=300;const tcx=tcv.getContext('2d');
+function tint(k,an,tt,x,y,once){tcx.clearRect(0,0,340,300);dr(tcx,k,an,tt,170,250,K,once);tcx.globalCompositeOperation='source-atop';tcx.fillStyle='rgba(60,150,255,.45)';tcx.fillRect(0,0,340,300);tcx.globalCompositeOperation='source-over';cx.drawImage(tcv,x-170,y-250)}
 function dr(c,k,an,t,x,y,sc,once){let u=ANIM[k],f=u.a[an],i=Math.floor(t*u.fps),F=f[once?Math.min(i,f.length-1):i%f.length];sc=sc||K;if(!AT.naturalWidth)return;for(const l of F){let r=ATL[l[0]];c.globalAlpha=l[7];c.setTransform(l[1]*sc,l[2]*sc,l[3]*sc,l[4]*sc,x+(l[5]-u.ax)*sc,y+(l[6]-u.ay)*sc);c.drawImage(AT,r[0],r[1],r[2],r[3],-APAD,-APAD,r[2],r[3])}c.setTransform(1,0,0,1,0,0);c.globalAlpha=1}
 bd.addEventListener('click',e=>{if(!S||S.over)return;let r=bd.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*1080,y=(e.clientY-r.top)/r.height*608,s=S.su.find(o=>Math.hypot(o.x-x,o.y-y)<34);
  if(!s)return;e.stopPropagation();if(s.k=='brain'){if(role=='g'){conn.send({pk:s.id});snd('sun')}}else if(role=='h'){S.su=S.su.filter(o=>o.id!=s.id);S.sun+=25;snd('sun')}},true);
 function draw(){let t=performance.now()/1e3;cx.clearRect(0,0,1080,608);let L=[];
  S.gs.forEach(g=>L.push([g.r*2,()=>cx.drawImage(GR,OX+(g.c+.5)*CW-36,OY+(g.r+1)*RH-GR.height*1.2-4,72,GR.height*1.2)]));
- S.pl.forEach(p=>{let k=PD[p.t][3],an=k=='wn'?(p.hp>200?'idle1':p.hp>100?'idle2':'idle3'):'idle',tt=t+p.id*.37,once=0;
+ S.pl.forEach(p=>{let k=PD[p.t][3],an=k=='wn'?(p.hp>200?'idle1':p.hp>100?'idle2':'idle3'):'idle',tt=t+p.id*.37,once=0,px=OX+(p.c+.5)*CW,dy=0;
   if(k=='ch'&&p.ph){if(p.ph==1){an='bite';tt=(.8-p.pt)*2.6;once=1}else if(p.ph==2)an='chew';else{an='swallow';tt=(.9-p.pt)*2.6;once=1}}
-  L.push([p.r*2,()=>dr(cx,k,an,tt,OX+(p.c+.5)*CW,OY+(p.r+1)*RH-8,K,once)])});
- S.zs.forEach(z=>{let k=zu(z),an=z.e?'eat':z.t==5&&!z.jd?'run':'walk',tt=t+z.id*.3,once=0;if(z.t==4&&z.ah<=0&&z.gs>0){an='gasp';tt=1.2-z.gs;once=1}
-  L.push([z.r*2+1,()=>dr(cx,k,an,tt,OX+z.x*CW,OY+(z.r+1)*RH-4,K,once)])});
+  if(k=='sq'&&p.ph){let u=ANIM.sq,f=n=>u.a[n].length/u.fps;once=1;
+   if(p.ph==1){an=p.tx<p.c+.5?'lookleft':'lookright';tt=(.5-p.pt)*f(an)/.5}
+   else{let e=p.ph==2?.5-p.pt:p.ph==3?.5+.35-p.pt:.85;px+=(OX+p.tx*CW-px)*Math.min(1,e/.85);dy=-85*Math.sin(Math.PI*Math.min(1,e/.85));an=p.ph==2?'jumpup':'jumpdown';tt=p.ph==2?(.5-p.pt)*f('jumpup')/.5:p.ph==3?(.35-p.pt)*f('jumpdown')/.35:99}}
+  L.push([p.r*2+1,()=>dr(cx,k,an,tt,px,OY+(p.r+1)*RH-8+dy,K,once)])});
+ S.zs.forEach(z=>{let k=zu(z),an=z.e?'eat':z.t==5&&!z.jd?'run':'walk',tt=(z.ap||0)+z.id*.3,once=0,X=OX+z.x*CW,Y=OY+(z.r+1)*RH-4;if(z.t==4&&z.ah<=0&&z.gs>0){an='gasp';tt=1.2-z.gs;once=1}
+  L.push([z.r*2+1,()=>z.sl>0?tint(k,an,tt,X,Y,once):dr(cx,k,an,tt,X,Y,K,once)])});
  S.fx.forEach(f=>{if(f.an=='hat'){let m=HT[f.img],a=f.a,y=Math.min(f.y-120*a+520*a*a,f.y+92);L.push([f.r*2+2,()=>{if(!m.naturalWidth)return;cx.save();cx.globalAlpha=Math.min(1,(1.4-a)/.4);cx.translate(f.x+a*45,y);cx.rotate(a*4);cx.drawImage(m,-m.naturalWidth*K/2,-m.naturalHeight*K/2,m.naturalWidth*K,m.naturalHeight*K);cx.restore()}]);return}
   L.push([f.r*2+1,()=>dr(cx,f.k,f.an,f.a,f.x,f.y,K,1)]);
   if(f.an=='death'){let a=Math.min(f.a,.7)/.7,h=HD['z'+f.t]||HD.z0,w=h.naturalWidth*K,q=h.naturalHeight*K;L.push([f.r*2+2,()=>{cx.save();cx.translate(f.x-6-a*16,f.y-92+a*a*80);cx.rotate(-a*1.8);cx.drawImage(h,-w/2,-q/2,w,q);cx.restore()}])}});
@@ -110,14 +117,30 @@ function start(){mus('lawn');snd('readysetplant');$('lob').style.display='none';
 function setup(c){conn=c;c.on('data',d=>{if(role=='h'){if(d.rd){orr=1;if(rdy)start()}else if(d.z!=null&&S)zin(d.z,d.r,d.c);else if(d.pk!=null&&S){let q=S.su.find(o=>o.id==d.pk&&o.k=='brain');if(q){S.su=S.su.filter(o=>o!=q);S.br+=25;ev('sun')}}}else if(d.s){S=d.s;S.ev.forEach(snd);if(!$('v'))start()}});
  c.on('close',()=>{$('pk').style.display='none';$('lob').style.display='flex';$('lob').innerHTML='<div><h1>Opponent left</h1><button class=k onclick=location.reload()>Back</button></div>'});
  c.open?choose():c.on('open',choose)}
-$('h').onclick=()=>{mus('seed');role='h';let id=Math.random().toString(36).slice(2,6),p=new Peer('pvzvs-'+id);p.on('open',()=>$('st').textContent='Room code: '+id+' — give it to your opponent and wait…');p.on('connection',setup);p.on('error',e=>$('st').textContent='Error: '+e.type)};
-$('j').onclick=()=>{mus('seed');role='g';$('st').textContent='Connecting…';let p=new Peer();p.on('open',()=>setup(p.connect('pvzvs-'+$('code').value.trim().toLowerCase())));p.on('error',e=>$('st').textContent='Error: '+e.type)};
+// ---- Network: STUN + TURN relay servers so players behind strict routers/NAT can still connect.
+// To use your own relay (more reliable), replace the TURN entries below with the iceServers from a free
+// account at metered.ca (or any TURN provider).
+const ICE=[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'},{urls:'stun:global.stun.twilio.com:3478'},
+ {urls:['turn:openrelay.metered.ca:80','turn:openrelay.metered.ca:443','turn:openrelay.metered.ca:443?transport=tcp','turns:openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'}];
+const PO={config:{iceServers:ICE,iceCandidatePoolSize:4}};
+$('h').onclick=()=>{mus('seed');role='h';$('st').textContent='Creating room…';let id=Math.random().toString(36).slice(2,6),p=new Peer('pvzvs-'+id,PO);
+ p.on('open',()=>$('st').textContent='Room code: '+id.toUpperCase()+' — give it to your opponent and wait…');p.on('connection',setup);
+ p.on('disconnected',()=>{try{p.reconnect()}catch(e){}});
+ p.on('error',e=>$('st').textContent=e.type=='unavailable-id'?'Room code clash - click Host again.':'Error: '+e.type+' (check your internet and try again)')};
+$('j').onclick=()=>{mus('seed');role='g';let code=$('code').value.trim().toLowerCase();if(!code){$('st').textContent='Type the room code first.';return}
+ $('st').textContent='Contacting matchmaking server…';let p=new Peer(PO),done=0,t2;
+ const fail=m=>{if(done)return;done=1;clearTimeout(t1);clearTimeout(t2);$('st').textContent=m;try{p.destroy()}catch(e){}};
+ let t1=setTimeout(()=>fail('Cannot reach the matchmaking server. Check your internet and click Join again.'),12000);
+ p.on('open',()=>{clearTimeout(t1);$('st').textContent='Connecting to host…';let c=p.connect('pvzvs-'+code,{reliable:true});
+  t2=setTimeout(()=>fail('Could not connect (blocked network or wrong code). Ask the host to refresh and host again, then click Join again.'),30000);
+  c.on('open',()=>{done=1;clearTimeout(t2)});c.on('error',e=>fail('Connection error: '+e));setup(c)});
+ p.on('error',e=>fail(e.type=='peer-unavailable'?'Room not found - check the code (the host must still be waiting).':'Error: '+e.type+' - click Join to retry.'))};
 
 const HP=["Howdy, neighbor! I'm Crazy Dave. This is a two-player fight: one of you plants, the other one brings the zombies!",
 "The goal: the plant player must hold out for 5 minutes. The zombie player wins by getting any zombie across the lawn and into the house!",
 "Plant player: click falling sun to collect it. Pick a seed from the top bar, then click a lawn tile to plant it. Sunflowers pop out extra sun for you to click, and every seed needs a moment to recharge.",
 "Zombie player: you earn brains over time. Pick a zombie, then click the row where you want it to walk in. Gravestones are your sunflowers! Put them on any free tile and they pop out brains - click the brains to collect them!",
-"Plant tips: Cherry Bombs blast zombies - and gravestones! A Chomper eats one zombie and then chews for 30 seconds before it can eat again. Squash flattens whatever walks up. Puff-shrooms are free but short range. Wall-nuts stall zombies. Snow Peas slow them down. Use the shovel to dig up a plant you don't want.",
+"Plant tips: Cherry Bombs blast zombies - and gravestones! A Chomper eats one zombie and then chews for 30 seconds before it can eat again. Squash jumps on a zombie that gets close on either side of it. Puff-shrooms are free but short range. Wall-nuts stall zombies. Snow Peas slow them down. Use the shovel to dig up a plant you don't want.",
 "Zombie tips: Pole Vaulters hop over the first plant. Footballs are fast and tough. Cones and buckets crack and fall off when shot. Tear a Newspaper Zombie's paper and it goes berserk and sprints! Rush one lane while the plants are busy, and keep a few gravestones going for brains!",
 "Before the match you each pick up to 5 seeds, then hit Ready. Share your room code with a friend to play online. The match keeps running while you read this, so be quick, neighbor!",
 "That's it! Go protect your brains... or go eat them! You can open me again any time with the Help button."];

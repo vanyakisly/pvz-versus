@@ -14,3 +14,8 @@ Breaking: cones/buckets/football helmets crack in 3 stages and fall off; Newspap
 Chomper: bite -> chew animation for ~29s -> swallow, cannot eat for 30s total.
 Sounds: eating (chompsoft), hat hits/breaks, newspaper rip/rage, ready-set-plant at start, win (prize) / lose (scream + evil laugh) at the end.
 Files: sprite parts are packed in assets/atlas.png (57 files total, under GitHub's 100-file browser upload limit). If the music/sounds don't play, a warning icon appears on the sound button: make sure the whole assets folder was uploaded.
+Network: uses STUN + TURN relay servers (see the ICE list near the bottom of index.html) so players on different/strict networks can connect.
+If joining ever still fails, put your own TURN servers in that list (free account at metered.ca gives you an iceServers list).
+Join/Host now show clear errors (wrong code, server unreachable, blocked network) and time out instead of staying on "Connecting".
+Squash: spots zombies on either side, looks, jumps in an arc and lands on them (animated), then disappears.
+Snow Pea: slowed zombies turn blue, and animate/walk/bite at half speed.
