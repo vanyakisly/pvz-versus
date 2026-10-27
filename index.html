@@ -55,7 +55,7 @@ const pk=(k,c,r)=>S.su.push({id:++S.id,k,x:OX+(c+.5)*CW,y:OY+r*RH+34,ty:OY+r*RH+
 const AR={1:36,2:110,3:100,4:20},BRK={1:'z0',2:'z0',3:'z3x',4:'z4n'},ARK={1:'z1',2:'z2',3:'z3',4:'z4'},HATS=['','hat_cone','hat_bucket','hat_helmet','hat_paper'];
 function zu(z){let a=AR[z.t];if(!a)return'z'+z.t;if(z.ah<=0)return BRK[z.t];let r=z.ah/a;return ARK[z.t]+(r>.66?'':r>.33?'b':'c')}
 function brk(z){S.fx.push({id:++S.id,an:'hat',img:HATS[z.t],x:OX+z.x*CW,y:OY+(z.r+1)*RH-96,r:z.r,a:0});if(z.t==4){z.gs=1.2;ev('newspaper_rip')}else ev(z.t==1?'plastichit':'shieldhit')}
-function hit(z,d){if(z.ah>0){let o=z.ah;z.ah=Math.max(0,o-d);if(z.ah<=0){brk(z);z.hp-=d-o}else ev(z.t==1?'plastichit':z.t==4?'splat':'shieldhit')}else{z.hp-=d;ev('splat')}}
+function hit(z,d){if(z.ah>0){let o=z.ah;z.ah=Math.max(0,o-d);if(z.ah<=0){brk(z);z.hp=(z.t==4&&d-o<50)?ZD[0][2]:z.hp-(d-o)}else ev(z.t==1?'plastichit':z.t==4?'splat':'shieldhit')}else{z.hp-=d;ev('splat')}}
 function shoot(p,k){let n=k=='rep'?2:1;for(let i=0;i<n;i++)S.ps.push({id:++S.id,x:p.c+.8-i*.5,r:p.r,s:k=='snow',d:k=='puff'?1:2,m:k=='puff'?p.c+3.8:0});ev('throw1')}
 function tick(dt){S.t+=dt;S.br+=3*dt;S.sk-=dt;if(S.sk<=0){S.sk=6;S.su.push({id:++S.id,x:OX+30+Math.random()*680,y:-20,ty:OY+Math.random()*400})}
  S.su.forEach(s=>{s.y=Math.min(s.ty,s.y+80*dt);if(s.k){s.a+=dt;if(s.a>6){s.rm=1;if(s.k=='sun')S.sun+=25;else S.br+=25}}});S.su=S.su.filter(s=>!s.rm);for(let k in S.cd)S.cd[k]=Math.max(0,S.cd[k]-dt);
