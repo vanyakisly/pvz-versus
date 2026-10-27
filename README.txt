@@ -19,3 +19,5 @@ If joining ever still fails, put your own TURN servers in that list (free accoun
 Join/Host now show clear errors (wrong code, server unreachable, blocked network) and time out instead of staying on "Connecting".
 Squash: spots zombies on either side, looks, jumps in an arc and lands on them (animated), then disappears.
 Snow Pea: slowed zombies turn blue, and animate/walk/bite at half speed.
+Robustness: data files are cache-busted (anim.js?v=..., atlas.png?v=...); a drawing/logic error no longer freezes the game and shows a red error line at the bottom-left instead.
+The lobby shows the version (bottom-left). If something looks broken after updating, press Ctrl+F5 once to load fresh files and check the version matches.

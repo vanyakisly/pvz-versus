@@ -23,13 +23,16 @@
 #pf{height:100%;width:0;background:linear-gradient(#9be56a,#3f9a2a)}
 </style>
 <button class=k id=mu style="position:fixed;right:6px;top:6px;z-index:100">🔊</button><div id=lob><h1 class=logo>Plants <small>vs.</small> Zombies<br><span>VERSUS</span></h1>
-<div id=tomb><button class=k id=h>Host Game<br><small>play Plants</small></button><input id=code placeholder="ROOM CODE" size=8><button class=k id=j>Join Game<br><small>play Zombies</small></button><button class=k id=hb>❓ Help</button><div id=st></div></div></div>
+<div id=tomb><button class=k id=h>Host Game<br><small>play Plants</small></button><input id=code placeholder="ROOM CODE" size=8><button class=k id=j>Join Game<br><small>play Zombies</small></button><button class=k id=hb>❓ Help</button><div id=st></div></div><small style="position:absolute;left:8px;bottom:6px;color:#fff8;font-size:11px">v20261028a</small></div>
 <div id=pk><h2 id=pt></h2><div id=sl></div><div id=pg></div><div id=pn></div><button class=k id=rd>Let's Rock!</button></div>
 <div id=w><div id=hud></div><div id=pb><div id=pf></div></div><div id=bd><canvas id=cv width=1080 height=608></canvas></div></div>
 <div id=hp><canvas id=dv width=300 height=430></canvas><div id=bub><div id=ht></div><div class=b><button class=k id=hb2>Back</button><span id=hn></span><button class=k id=hf>Next</button><button class=k id=hx>Close</button></div></div></div>
-<script src="assets/anim.js"></script>
+<script src="assets/anim.js?v=20261028a"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
 <script>
+const VER='20261028a';
+const rep=e=>{let b=document.getElementById('err');if(!b){b=document.createElement('div');b.id='err';b.style.cssText='position:fixed;left:6px;bottom:6px;z-index:999;background:#5a0000;color:#fff;font:12px monospace;padding:6px 10px;border-radius:6px;max-width:92vw';document.body.appendChild(b)}b.textContent='Error: '+(e.message||e)+' (v'+VER+') - try Ctrl+F5 to load fresh files'};
+addEventListener('error',e=>rep(e));
 const $=i=>document.getElementById(i),CW=81,RH=101.25,OX=108,OY=90;
 // [name,cost,hp,img,cooldown,kind]
 const PD=[['Sunflower',50,30,'sf',5,'sun'],['Peashooter',100,30,'pe',5,'pea'],['Wall-nut',50,300,'wn',8,'wall'],['Snow Pea',175,30,'sp',5,'snow'],['Cherry Bomb',150,30,'cb',10,'bomb'],['Repeater',200,30,'rp',5,'rep'],['Chomper',150,30,'ch',7,'chomp'],['Squash',50,30,'sq',8,'squash'],['Puff-shroom',0,30,'pu',3,'puff']];
@@ -75,17 +78,17 @@ function tick(dt){S.t+=dt;S.br+=3*dt;S.sk-=dt;if(S.sk<=0){S.sk=6;S.su.push({id:+
   if(p){if(z.t==5&&!z.jd){z.jd=1;z.x=p.c-.3;ev('groan')}else{z.e=1;p.hp-=10*dt*(z.sl>0?.5:1);if(S.es<=0){S.es=.45;ev('chompsoft')}}}else{z.e=0;z.x-=(z.t==4&&z.ah<=0?.65:ZD[z.t][3])*dt*(z.sl?.5:1)}if(z.x<0)S.over=2});
  S.pl=S.pl.filter(p=>p.hp>0);S.zs=S.zs.filter(z=>{if(z.hp>0)return 1;if(!z.nf)S.fx.push({id:++S.id,k:zu(z),t:z.t,an:'death',x:OX+z.x*CW,y:OY+(z.r+1)*RH-4,r:z.r,a:0});return 0});S.fx.forEach(f=>f.a+=dt);S.fx=S.fx.filter(f=>f.a<(f.an=='death'?3.3:f.an=='hat'?1.4:1.6));S.gs=S.gs.filter(g=>g.hp>0);if(S.t>=300&&!S.over)S.over=1}
 const K=1.5,cx=$('cv').getContext('2d');
-const li=n=>{let m=new Image();m.src='assets/'+n;return m},AT=li('atlas.png'),HT={hat_cone:li('hat_cone.png'),hat_bucket:li('hat_bucket.png'),hat_helmet:li('hat_helmet.png'),hat_paper:li('hat_paper.png')},HD={z0:li('zh.png'),z3:li('zfh.png'),z5:li('zph.png')},GR=li('grave.png'),BR=li('brain.png'),P1=li('pea.png'),P2=li('spea.png');
+const li=n=>{let m=new Image();m.src='assets/'+n;return m},AT=li('atlas.png?v=20261028a'),HT={hat_cone:li('hat_cone.png'),hat_bucket:li('hat_bucket.png'),hat_helmet:li('hat_helmet.png'),hat_paper:li('hat_paper.png')},HD={z0:li('zh.png'),z3:li('zfh.png'),z5:li('zph.png')},GR=li('grave.png'),BR=li('brain.png'),P1=li('pea.png'),P2=li('spea.png');
 const tcv=document.createElement('canvas');tcv.width=340;tcv.height=300;const tcx=tcv.getContext('2d');
 function tint(k,an,tt,x,y,once){tcx.clearRect(0,0,340,300);dr(tcx,k,an,tt,170,250,K,once);tcx.globalCompositeOperation='source-atop';tcx.fillStyle='rgba(60,150,255,.45)';tcx.fillRect(0,0,340,300);tcx.globalCompositeOperation='source-over';cx.drawImage(tcv,x-170,y-250)}
-function dr(c,k,an,t,x,y,sc,once){let u=ANIM[k],f=u.a[an],i=Math.floor(t*u.fps),F=f[once?Math.min(i,f.length-1):i%f.length];sc=sc||K;if(!AT.naturalWidth)return;for(const l of F){let r=ATL[l[0]];c.globalAlpha=l[7];c.setTransform(l[1]*sc,l[2]*sc,l[3]*sc,l[4]*sc,x+(l[5]-u.ax)*sc,y+(l[6]-u.ay)*sc);c.drawImage(AT,r[0],r[1],r[2],r[3],-APAD,-APAD,r[2],r[3])}c.setTransform(1,0,0,1,0,0);c.globalAlpha=1}
+function dr(c,k,an,t,x,y,sc,once){let u=ANIM[k],f=u&&u.a[an];if(!f)return;let i=Math.max(0,Math.floor(t*u.fps)||0),F=f[once?Math.min(i,f.length-1):i%f.length];sc=sc||K;if(!F||!AT.naturalWidth)return;for(const l of F){let r=ATL[l[0]];c.globalAlpha=l[7];c.setTransform(l[1]*sc,l[2]*sc,l[3]*sc,l[4]*sc,x+(l[5]-u.ax)*sc,y+(l[6]-u.ay)*sc);c.drawImage(AT,r[0],r[1],r[2],r[3],-APAD,-APAD,r[2],r[3])}c.setTransform(1,0,0,1,0,0);c.globalAlpha=1}
 bd.addEventListener('click',e=>{if(!S||S.over)return;let r=bd.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*1080,y=(e.clientY-r.top)/r.height*608,s=S.su.find(o=>Math.hypot(o.x-x,o.y-y)<34);
  if(!s)return;e.stopPropagation();if(s.k=='brain'){if(role=='g'){conn.send({pk:s.id});snd('sun')}}else if(role=='h'){S.su=S.su.filter(o=>o.id!=s.id);S.sun+=25;snd('sun')}},true);
 function draw(){let t=performance.now()/1e3;cx.clearRect(0,0,1080,608);let L=[];
  S.gs.forEach(g=>L.push([g.r*2,()=>cx.drawImage(GR,OX+(g.c+.5)*CW-36,OY+(g.r+1)*RH-GR.height*1.2-4,72,GR.height*1.2)]));
  S.pl.forEach(p=>{let k=PD[p.t][3],an=k=='wn'?(p.hp>200?'idle1':p.hp>100?'idle2':'idle3'):'idle',tt=t+p.id*.37,once=0,px=OX+(p.c+.5)*CW,dy=0;
   if(k=='ch'&&p.ph){if(p.ph==1){an='bite';tt=(.8-p.pt)*2.6;once=1}else if(p.ph==2)an='chew';else{an='swallow';tt=(.9-p.pt)*2.6;once=1}}
-  if(k=='sq'&&p.ph){let u=ANIM.sq,f=n=>u.a[n].length/u.fps;once=1;
+  if(k=='sq'&&p.ph){let u=ANIM.sq,f=n=>(u.a[n]?u.a[n].length:1)/u.fps;once=1;
    if(p.ph==1){an=p.tx<p.c+.5?'lookleft':'lookright';tt=(.5-p.pt)*f(an)/.5}
    else{let e=p.ph==2?.5-p.pt:p.ph==3?.5+.35-p.pt:.85;px+=(OX+p.tx*CW-px)*Math.min(1,e/.85);dy=-85*Math.sin(Math.PI*Math.min(1,e/.85));an=p.ph==2?'jumpup':'jumpdown';tt=p.ph==2?(.5-p.pt)*f('jumpup')/.5:p.ph==3?(.35-p.pt)*f('jumpdown')/.35:99}}
   L.push([p.r*2+1,()=>dr(cx,k,an,tt,px,OY+(p.r+1)*RH-8+dy,K,once)])});
@@ -95,7 +98,7 @@ function draw(){let t=performance.now()/1e3;cx.clearRect(0,0,1080,608);let L=[];
   L.push([f.r*2+1,()=>dr(cx,f.k,f.an,f.a,f.x,f.y,K,1)]);
   if(f.an=='death'){let a=Math.min(f.a,.7)/.7,h=HD['z'+f.t]||HD.z0,w=h.naturalWidth*K,q=h.naturalHeight*K;L.push([f.r*2+2,()=>{cx.save();cx.translate(f.x-6-a*16,f.y-92+a*a*80);cx.rotate(-a*1.8);cx.drawImage(h,-w/2,-q/2,w,q);cx.restore()}])}});
  S.ps.forEach(q=>L.push([50,()=>cx.drawImage(q.s?P2:P1,OX+q.x*CW-14,OY+q.r*RH+RH*.42,28,28)]));
- L.sort((a,b)=>a[0]-b[0]);L.forEach(o=>o[1]());
+ L.sort((a,b)=>a[0]-b[0]);L.forEach(o=>{try{o[1]()}catch(e){rep(e)}});
  S.su.forEach(q=>{if(q.k=='brain')cx.drawImage(BR,q.x-22,q.y-20+Math.sin(t*4+q.id)*3,44,42);else dr(cx,'sun','idle',t,q.x,q.y)});
  let h=role=='h',v=h?S.sun:Math.floor(S.br);$('v').textContent=Math.floor(v);$('t').textContent=Math.max(0,300-Math.floor(S.t))+'s';$('pf').style.width=Math.min(100,S.t/3)+'%';if($('sv'))$('sv').className='k sv'+(sel==-2?' s':'');
  document.querySelectorAll('.k.p').forEach(b=>{let i=+b.dataset.i;b.disabled=(h?S.sun<PD[i][1]||S.cd[i]>0:S.br<ZD[i][1]||S.cd['z'+i]>0);b.className='k p'+(sel==i?' s':'');b.querySelector('.cd').style.height=Math.min(100,100*(h?S.cd[i]/PD[i][4]:S.cd['z'+i]/ZD[i][5])||0)+'%'});
@@ -112,8 +115,8 @@ function choose(){$('lob').style.display='none';$('pk').style.display='flex';poo
 function start(){mus('lawn');snd('readysetplant');$('lob').style.display='none';$('pk').style.display='none';let h=role=='h',P=h?PD:ZD;
  $('hud').innerHTML=`<div id=cb><span id=ic>${h?'<i class=sunic></i>':'🧠'}</span><b id=v>0</b></div>`+pick.map(i=>`<button class="k p" data-i=${i}>${cardH(P[i],h)}</button>`).join('')+(h?'<button class="k sv" id=sv title="Shovel"><svg width=40 height=60 viewBox="0 0 40 60"><rect x=17 y=2 width=6 height=30 rx=3 fill=#c9965a stroke=#4a2b11 transform="rotate(-18 20 30)"/><path d="M6 36 L30 30 L34 52 L12 56 Z" fill=#b9c1ca stroke=#454b53 stroke-width=2 transform="rotate(-18 20 40)"/></svg></button>':'')+'<span id=t></span>';
  document.querySelectorAll('.k.p').forEach(b=>b.onclick=()=>sel=+b.dataset.i);if(h)$('sv').onclick=()=>sel=-2;
- if(!h)(function G(){draw();requestAnimationFrame(G)})();if(h){S={t:0,sun:150,br:100,pl:[],zs:[],ps:[],su:[],gs:[],id:0,sk:2,over:0,cd:{},ev:[],fx:[]};let last=performance.now(),ls=0;
-  (function L(n){tick(Math.min(.1,(n-last)/1e3));last=n;draw();if(n-ls>50||S.over){ls=n;conn.send({s:S});S.ev=[]}requestAnimationFrame(L)})(last)}}
+ if(!h)(function G(){requestAnimationFrame(G);try{draw()}catch(e){rep(e)}})();if(h){S={t:0,sun:150,br:100,pl:[],zs:[],ps:[],su:[],gs:[],id:0,sk:2,over:0,cd:{},ev:[],fx:[]};let last=performance.now(),ls=0;
+  (function L(n){requestAnimationFrame(L);try{tick(Math.min(.1,(n-last)/1e3));last=n;draw()}catch(e){last=n;rep(e)}if(n-ls>50||S.over){ls=n;try{conn.send({s:S})}catch(e){rep(e)}S.ev=[]}})(last)}}
 function setup(c){conn=c;c.on('data',d=>{if(role=='h'){if(d.rd){orr=1;if(rdy)start()}else if(d.z!=null&&S)zin(d.z,d.r,d.c);else if(d.pk!=null&&S){let q=S.su.find(o=>o.id==d.pk&&o.k=='brain');if(q){S.su=S.su.filter(o=>o!=q);S.br+=25;ev('sun')}}}else if(d.s){S=d.s;S.ev.forEach(snd);if(!$('v'))start()}});
  c.on('close',()=>{$('pk').style.display='none';$('lob').style.display='flex';$('lob').innerHTML='<div><h1>Opponent left</h1><button class=k onclick=location.reload()>Back</button></div>'});
  c.open?choose():c.on('open',choose)}
