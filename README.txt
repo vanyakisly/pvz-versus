@@ -21,3 +21,9 @@ Squash: spots zombies on either side, looks, jumps in an arc and lands on them (
 Snow Pea: slowed zombies turn blue, and animate/walk/bite at half speed.
 Robustness: data files are cache-busted (anim.js?v=..., atlas.png?v=...); a drawing/logic error no longer freezes the game and shows a red error line at the bottom-left instead.
 The lobby shows the version (bottom-left). If something looks broken after updating, press Ctrl+F5 once to load fresh files and check the version matches.
+New units (from the supplied GIFs, converted to frame animations in assets/atlas2.webp - no GIFs are used at runtime):
+ Garlic: a zombie takes one bite then swerves one lane up or down (top-lane zombies can only go down, bottom-lane only up).
+ Spikeweed: zombies walk over it and take damage; only a Gargantuar smashes it.
+ Tall-nut: very tough; Pole Vaulters cannot jump over it.
+ Gargantuar (zombie, 350 brains): slow giant, smashes any plant in one hit (club lands ~1.7s into the swing); Chompers cannot eat it, Cherry Bomb/Squash only wound it.
+Sounds: gargantuar_thump.mp3, gargantuar_death.mp3 (converted from the supplied .ogg files).
