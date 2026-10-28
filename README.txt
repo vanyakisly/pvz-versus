@@ -27,3 +27,8 @@ New units (from the supplied GIFs, converted to frame animations in assets/atlas
  Tall-nut: very tough; Pole Vaulters cannot jump over it.
  Gargantuar (zombie, 350 brains): slow giant, smashes any plant in one hit (club lands ~1.7s into the swing); Chompers cannot eat it, Cherry Bomb/Squash only wound it.
 Sounds: gargantuar_thump.mp3, gargantuar_death.mp3 (converted from the supplied .ogg files).
+Mobile: works in landscape on phones/tablets (portrait shows a "rotate" prompt). Everything (menus, seed chooser, help, HUD) scales with the game stage.
+ - Tap a seed packet, then tap a tile. Tap sun/brain pickups (larger tap area on touch screens). Shovel works by tap too.
+ - Sound: the first tap unlocks audio (required by iOS/Android). Sound effects use WebAudio so they play reliably on phones.
+ - Fullscreen button (top-right) on Android/iPad; on iPhone use Share > Add to Home Screen for a full-screen app (manifest + icons included).
+ - The screen stays awake during a match where the browser allows it.
