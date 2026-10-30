@@ -28,22 +28,23 @@ button,.k,.c{touch-action:manipulation}input{font-size:18px}#hud:empty{display:n
 #rot{position:fixed;inset:0;z-index:1000;background:#0b140af5;color:#fff;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;font-size:22px}
 </style>
 <div id=w><div id=hud></div><div id=pb><div id=pf></div></div><div id=bd><canvas id=cv width=1080 height=608></canvas></div><div id=lob><h1 class=logo>Plants <small>vs.</small> Zombies<br><span>VERSUS</span></h1>
-<div id=tomb><button class=k id=h>Host Game<br><small>play Plants</small></button><input id=code placeholder="ROOM CODE" size=8 maxlength=8 autocapitalize=characters autocomplete=off autocorrect=off spellcheck=false><button class=k id=j>Join Game<br><small>play Zombies</small></button><button class=k id=hb>❓ Help</button><div id=st></div></div><small style="position:absolute;left:8px;bottom:6px;color:#fff8;font-size:11px">v20261030a</small></div>
+<div id=tomb><button class=k id=h>Host Game<br><small>play Plants</small></button><input id=code placeholder="ROOM CODE" size=8 maxlength=8 autocapitalize=characters autocomplete=off autocorrect=off spellcheck=false><button class=k id=j>Join Game<br><small>play Zombies</small></button><button class=k id=hb>❓ Help</button><div id=st></div></div><small style="position:absolute;left:8px;bottom:6px;color:#fff8;font-size:11px">v20261101a</small></div>
 <div id=pk><h2 id=pt></h2><div id=sl></div><div id=pg></div><div id=pn></div><button class=k id=rd>Let's Rock!</button></div>
 <div id=hp><canvas id=dv width=300 height=430></canvas><div id=bub><div id=ht></div><div class=b><button class=k id=hb2>Back</button><span id=hn></span><button class=k id=hf>Next</button><button class=k id=hx>Close</button></div></div></div>
 <button class=k id=fsb title="Fullscreen">⛶</button><button class=k id=mu title="Sound">🔊</button></div>
 <div id=rot><div style="font-size:64px">📱↻</div><div>Rotate your phone to landscape<br>to play</div></div>
-<script src="assets/anim.js?v=20261030a"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
+<script src="assets/anim.js?v=20261101a"></script>
+<script src="assets/peerjs.min.js?v=20261101a"></script>
+<script src="assets/mqtt.min.js?v=20261101a"></script>
 <script>
-const VER='20261030a';
+const VER='20261101a';
 const rep=e=>{let b=document.getElementById('err');if(!b){b=document.createElement('div');b.id='err';b.style.cssText='position:fixed;left:6px;bottom:6px;z-index:999;background:#5a0000;color:#fff;font:12px monospace;padding:6px 10px;border-radius:6px;max-width:92vw';document.body.appendChild(b)}b.textContent='Error: '+(e.message||e)+' (v'+VER+') - try Ctrl+F5 to load fresh files'};
 addEventListener('error',e=>rep(e));
 const $=i=>document.getElementById(i),CW=81,RH=101.25,OX=108,OY=90;
 // [name,cost,hp,img,cooldown,kind]
-const PD=[['Sunflower',50,30,'sf',5,'sun'],['Peashooter',100,30,'pe',5,'pea'],['Wall-nut',50,300,'wn',8,'wall'],['Snow Pea',175,30,'sp',5,'snow'],['Cherry Bomb',150,30,'cb',10,'bomb'],['Repeater',200,30,'rp',5,'rep'],['Chomper',150,30,'ch',7,'chomp'],['Squash',50,30,'sq',8,'squash'],['Puff-shroom',0,30,'pu',3,'puff'],['Garlic',50,40,'ga',7,'garlic'],['Spikeweed',100,30,'ss',5,'spike'],['Tall-nut',125,600,'tn',8,'tall']];
+const PD=[['Sunflower',50,30,'sf',6,'sun'],['Peashooter',100,30,'pe',6,'pea'],['Wall-nut',50,300,'wn',14,'wall'],['Snow Pea',175,30,'sp',12,'snow'],['Cherry Bomb',150,30,'cb',28,'bomb'],['Repeater',200,30,'rp',14,'rep'],['Chomper',150,30,'ch',20,'chomp'],['Squash',50,30,'sq',20,'squash'],['Puff-shroom',0,30,'pu',5,'puff'],['Garlic',50,40,'ga',14,'garlic'],['Spikeweed',100,30,'ss',14,'spike'],['Tall-nut',125,600,'tn',24,'tall'],['Grave Digger',75,30,'gd',16,'digger'],['Hypno-shroom',100,30,'hs',24,'hypno']];
 // [name,cost,hp,speed,img,cooldown]  (index 6 = Gravestone, makes brains)
-const ZD=[['Zombie',50,20,.2,'z0',1],['Conehead',100,56,.2,'z1',1],['Buckethead',150,130,.2,'z2',2],['Football',200,120,.4,'z3',3],['Newspaper',75,40,.25,'z4',1],['Pole Vaulter',125,30,.5,'z5',2],['Gravestone',75,150,0,'grave',4],['Gargantuar',350,300,.14,'z7',12]];
+const ZD=[['Zombie',50,20,.2,'z0',2],['Conehead',100,56,.2,'z1',5],['Buckethead',150,130,.2,'z2',10],['Football',200,120,.4,'z3',18],['Newspaper',75,40,.25,'z4',6],['Pole Vaulter',125,30,.5,'z5',9],['Gravestone',75,150,0,'grave',8],['Gargantuar',350,300,.14,'z7',45],['Imp',25,10,.3,'z8',3]];
 let S,role,conn,sel=-1,els={},bd=$('bd'),pick=[],rdy=0,orr=0,pool;
 const sa=document.createElement('div');sa.style.cssText='position:fixed;left:0;top:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)';document.body.appendChild(sa);
 const fit=()=>{let cs=getComputedStyle(sa),T=parseFloat(cs.paddingTop)||0,R=parseFloat(cs.paddingRight)||0,B=parseFloat(cs.paddingBottom)||0,L=parseFloat(cs.paddingLeft)||0,vv=window.visualViewport,W=(vv?vv.width:innerWidth)-L-R,H=(vv?vv.height:innerHeight)-T-B,k=Math.min(W/1080,H/608);
@@ -59,7 +60,7 @@ const MU=new Audio();MU.loop=true;MU.volume=.35;MU.preload='auto';MU.onerror=war
 const mus=n=>{if(cur==n)return;cur=n;if(!n){MU.pause();return}MU.src='assets/music_'+n+'.mp3';MU.muted=mute;MU.play().catch(()=>{})};
 $('mu').onclick=()=>{mute=!mute;$('mu').textContent=mute?'🔇':'🔊';MU.muted=mute};
 const AC=window.AudioContext||window.webkitAudioContext,ac=AC?new AC():null,BUF={};
-if(ac&&typeof fetch=='function')['throw1','splat','cherrybomb','plant','groan','sun','chomp','chompsoft','gulp','plastichit','shieldhit','newspaper_rip','newspaper_rarrgh','prize','scream','evillaugh','readysetplant','squash_hmm','bonk','gargantuar_thump','gargantuar_death','dave1','dave2','dave3'].forEach(n=>fetch('assets/'+n+'.mp3').then(r=>r.arrayBuffer()).then(b=>ac.decodeAudioData(b,d=>BUF[n]=d,()=>{})).catch(()=>{}));
+if(ac&&typeof fetch=='function')['throw1','splat','cherrybomb','plant','groan','sun','chomp','chompsoft','gulp','plastichit','shieldhit','newspaper_rip','newspaper_rarrgh','prize','scream','evillaugh','readysetplant','squash_hmm','bonk','gargantuar_thump','gargantuar_death','dave1','dave2','dave3','reverse_explosion','gravestone_rumble'].forEach(n=>fetch('assets/'+n+'.mp3').then(r=>r.arrayBuffer()).then(b=>ac.decodeAudioData(b,d=>BUF[n]=d,()=>{})).catch(()=>{}));
 ['pointerdown','touchstart','touchend','keydown','click'].forEach(e=>addEventListener(e,()=>{if(!cur)mus('menu');if(ac&&ac.state!='running')ac.resume();if(cur&&!mute&&MU.paused)MU.play().catch(()=>{})},{passive:true}));
 const snd=n=>{if(mute)return;if(ac&&BUF[n]){let s=ac.createBufferSource(),g=ac.createGain();g.gain.value=.5;s.buffer=BUF[n];s.connect(g);g.connect(ac.destination);s.start(0);return}let a=new Audio('assets/'+n+'.mp3');a.volume=.5;a.onerror=warn;a.play().catch(()=>{})},ev=n=>{S.ev.push(n);snd(n)};
 for(let r=0;r<5;r++)for(let c=0;c<9;c++){let d=document.createElement('div');d.className='c';d.style.cssText=`left:${OX+c*CW}px;top:${OY+r*RH}px`;d.onclick=()=>cell(c,r);bd.appendChild(d)}
@@ -67,50 +68,57 @@ const free=(c,r)=>!S.pl.some(p=>p.c==c&&p.r==r)&&!S.gs.some(g=>g.c==c&&g.r==r);
 function zin(t,r,c){if(S.over||!ZD[t]||S.br<ZD[t][1]||S.cd['z'+t]>0)return;
  if(t==6){if(!(c>=0&&c<9&&free(c,r)))return;S.gs.push({id:++S.id,c,r,hp:150,tm:8})}
  else{S.zs.push({id:++S.id,t,x:10.2,r,hp:AR[t]?20:ZD[t][2],ah:AR[t]||0});ev('groan')}S.br-=ZD[t][1];S.cd['z'+t]=ZD[t][5]}
-function cell(c,r){if(S.over)return;if(role=='g'){if(sel>=0)conn.send({z:sel,r,c});return}
+function cell(c,r){if(S.over)return;if(role=='g'){if(sel>=0)TX({z:sel,r,c});return}
  if(sel==-2){let i=S.pl.findIndex(p=>p.c==c&&p.r==r);if(i>=0){S.pl.splice(i,1);ev('plant')}sel=-1;return}
- if(sel<0||!free(c,r)||S.sun<PD[sel][1]||S.cd[sel]>0)return;S.sun-=PD[sel][1];S.cd[sel]=PD[sel][4];
- S.pl.push({id:++S.id,t:sel,c,r,hp:PD[sel][2],tm:PD[sel][5]=='bomb'?1:PD[sel][5]=='sun'?4:0});ev('plant')}
+ if(sel<0||S.sun<PD[sel][1]||S.cd[sel]>0)return;if(PD[sel][5]=='digger'?!(S.gs.some(g=>g.c==c&&g.r==r)&&!S.pl.some(p=>p.c==c&&p.r==r)):!free(c,r))return;S.sun-=PD[sel][1];S.cd[sel]=PD[sel][4];
+ S.pl.push({id:++S.id,t:sel,c,r,hp:PD[sel][2],tm:PD[sel][5]=='bomb'?1:PD[sel][5]=='sun'?4:0,dg:5});ev('plant')}
 const pk=(k,c,r)=>S.su.push({id:++S.id,k,x:OX+(c+.5)*CW,y:OY+r*RH+34,ty:OY+r*RH+34,a:0});
 const SMD=2.64,SMI=1.68,AR={1:36,2:110,3:100,4:20},BRK={1:'z0',2:'z0',3:'z3x',4:'z4n'},ARK={1:'z1',2:'z2',3:'z3',4:'z4'},HATS=['','hat_cone','hat_bucket','hat_helmet','hat_paper'];
 function zu(z){let a=AR[z.t];if(!a)return'z'+z.t;if(z.ah<=0)return BRK[z.t];let r=z.ah/a;return ARK[z.t]+(r>.66?'':r>.33?'b':'c')}
 function brk(z){S.fx.push({id:++S.id,an:'hat',img:HATS[z.t],x:OX+z.x*CW,y:OY+(z.r+1)*RH-96,r:z.r,a:0});if(z.t==4){z.gs=1.2;ev('newspaper_rip')}else ev(z.t==1?'plastichit':'shieldhit')}
+function dmgq(z,d){if(z.ah>0){z.ah-=d;if(z.ah<=0){z.ah=0;brk(z)}}else z.hp-=d}
 function hit(z,d){if(z.ah>0){let o=z.ah;z.ah=Math.max(0,o-d);if(z.ah<=0){brk(z);z.hp=(z.t==4&&d-o<50)?ZD[0][2]:z.hp-(d-o)}else ev(z.t==1?'plastichit':z.t==4?'splat':'shieldhit')}else{z.hp-=d;ev('splat')}}
 function shoot(p,k){let n=k=='rep'?2:1;for(let i=0;i<n;i++)S.ps.push({id:++S.id,x:p.c+.8-i*.5,r:p.r,s:k=='snow',d:k=='puff'?1:2,m:k=='puff'?p.c+3.8:0});ev('throw1')}
 function tick(dt){S.t+=dt;S.br+=3*dt;S.sk-=dt;if(S.sk<=0){S.sk=6;S.su.push({id:++S.id,x:OX+30+Math.random()*680,y:-20,ty:OY+Math.random()*400})}
  S.su.forEach(s=>{s.y=Math.min(s.ty,s.y+80*dt);if(s.k){s.a+=dt;if(s.a>6){s.rm=1;if(s.k=='sun')S.sun+=25;else S.br+=25}}});S.su=S.su.filter(s=>!s.rm);for(let k in S.cd)S.cd[k]=Math.max(0,S.cd[k]-dt);
  S.gs.forEach(g=>{g.tm-=dt;if(g.tm<=0){g.tm=8;pk('brain',g.c,g.r)}});
  S.es=Math.max(0,(S.es||0)-dt);
- S.pl.forEach(p=>{if(p.at>0)p.at-=dt;if(PD[p.t][5]=='chomp'&&p.ph){p.pt-=dt;if(p.pt<=0){if(p.ph==1){p.ph=2;p.pt=28.3}else if(p.ph==2){p.ph=3;p.pt=.9;ev('gulp')}else p.ph=0}return}
+ S.pl.forEach(p=>{if(p.at>0)p.at-=dt;
+  if(PD[p.t][5]=='digger'){p.dg=(p.dg==null?5:p.dg)-dt;let g=S.gs.find(o=>o.c==p.c&&o.r==p.r);if(!g)p.hp=0;else if(p.dg<=0){g.hp=0;p.hp=0;ev('gravestone_rumble')}return}
+  if(PD[p.t][5]=='chomp'&&p.ph){p.pt-=dt;if(p.pt<=0){if(p.ph==1){p.ph=2;p.pt=28.3}else if(p.ph==2){p.ph=3;p.pt=.9;ev('gulp')}else p.ph=0}return}
   if(PD[p.t][5]=='squash'&&p.ph){p.pt-=dt;let z=S.zs.find(o=>o.id==p.tz);if(z&&p.ph<4)p.tx=z.x;
-   if(p.pt<=0){if(p.ph==1){p.ph=2;p.pt=.5}else if(p.ph==2){p.ph=3;p.pt=.35}else if(p.ph==3){S.zs.forEach(y=>{if(y.r==p.r&&Math.abs(y.x-p.tx)<1.1){if(y.t==7)y.hp-=150;else y.hp=0}});ev('bonk');p.ph=4;p.pt=.7}else p.hp=0}return}
-  p.tm-=dt;if(p.tm>0)return;let k=PD[p.t][5],zr=S.zs.filter(z=>z.r==p.r);
+   if(p.pt<=0){if(p.ph==1){p.ph=2;p.pt=.5}else if(p.ph==2){p.ph=3;p.pt=.35}else if(p.ph==3){S.zs.forEach(y=>{if(!y.hyp&&y.r==p.r&&Math.abs(y.x-p.tx)<1.1){if(y.t==7)y.hp-=150;else y.hp=0}});ev('bonk');p.ph=4;p.pt=.7}else p.hp=0}return}
+  p.tm-=dt;if(p.tm>0)return;let k=PD[p.t][5],zr=S.zs.filter(z=>z.r==p.r&&!z.hyp);
   if(k=='sun'){p.tm=8;pk('sun',p.c,p.r)}
   else if(k=='pea'||k=='snow'||k=='rep'||k=='puff'){if(zr.some(z=>z.x>p.c&&z.x<p.c+(k=='puff'?3.5:99))){p.tm=1.4;shoot(p,k)}}
-  else if(k=='bomb'){S.zs.forEach(z=>{if(Math.abs(z.r-p.r)<=1&&Math.abs(z.x-p.c)<=1.6)hit(z,z.t==7?120:300)});S.gs.forEach(g=>{if(Math.abs(g.r-p.r)<=1&&Math.abs(g.c-p.c)<=1)g.hp=0});p.hp=0;S.fx.push({id:++S.id,k:'cb',an:'explode',x:OX+(p.c+.5)*CW,y:OY+(p.r+1)*RH-8,r:p.r,a:0});ev('cherrybomb')}
+  else if(k=='bomb'){S.zs.forEach(z=>{if(!z.hyp&&Math.abs(z.r-p.r)<=1&&Math.abs(z.x-p.c)<=1.6)hit(z,z.t==7?120:300)});S.gs.forEach(g=>{if(Math.abs(g.r-p.r)<=1&&Math.abs(g.c-p.c)<=1)g.hp=0});p.hp=0;S.fx.push({id:++S.id,k:'cb',an:'explode',x:OX+(p.c+.5)*CW,y:OY+(p.r+1)*RH-8,r:p.r,a:0});ev('cherrybomb')}
   else if(k=='chomp'){let z=zr.find(z=>z.t!=7&&z.x>p.c&&z.x<p.c+1.4);if(z){z.hp=0;z.nf=1;p.ph=1;p.pt=.8;ev('chomp')}}
   else if(k=='spike'){let hz=zr.filter(z=>Math.abs(z.x-(p.c+.5))<.6);if(hz.length){hz.forEach(z=>hit(z,2));p.tm=.6;p.at=1}}
   else if(k=='squash'){let z=zr.find(z=>Math.abs(z.x-(p.c+.5))<1.4);if(z){p.ph=1;p.pt=.5;p.tz=z.id;p.tx=z.x;ev('squash_hmm')}}});
- S.ps.forEach(q=>{q.x+=5*dt;if(q.m&&q.x>q.m)q.x=99;let z=S.zs.find(z=>z.r==q.r&&Math.abs(z.x-q.x)<.4);if(z){hit(z,q.d);if(q.s)z.sl=3;q.x=99}});S.ps=S.ps.filter(q=>q.x<10);
+ S.ps.forEach(q=>{q.x+=5*dt;if(q.m&&q.x>q.m)q.x=99;let z=S.zs.find(z=>z.r==q.r&&!z.hyp&&Math.abs(z.x-q.x)<.4);if(z){hit(z,q.d);if(q.s)z.sl=3;q.x=99}});S.ps=S.ps.filter(q=>q.x<10);
  S.zs.forEach(z=>{z.sl=Math.max(0,(z.sl||0)-dt);z.ap=(z.ap||0)+dt*(z.sl>0?.5:1);if(z.ls>0)z.ls-=dt;
+  if(z.hyp){let en=S.zs.find(e=>!e.hyp&&e.r==z.r&&Math.abs(e.x-z.x)<.75);if(en){z.e=1;dmgq(en,10*dt*(z.sl>0?.5:1))}else{z.e=0;z.x+=(z.t==4&&z.ah<=0?.65:ZD[z.t][3])*dt*(z.sl>0?.5:1)}return}
   if(z.gs>0){z.gs-=dt;if(z.gs<=0)ev('newspaper_rarrgh');z.e=0;return}
-  if(z.sm>0){z.sm-=dt*(z.sl>0?.5:1);z.e=1;if(!z.smk&&z.sm<=SMD-SMI){z.smk=1;let q=S.pl.find(o=>o.id==z.sp);if(q)q.hp=0;ev('gargantuar_thump')}if(z.sm<=0){z.sm=0;z.smk=0}return}
+  if(z.sm>0){z.sm-=dt*(z.sl>0?.5:1);z.e=1;if(!z.smk&&z.sm<=SMD-SMI){z.smk=1;let q=(z.spz?S.zs:S.pl).find(o=>o.id==z.sp);if(q)q.hp=0;ev('gargantuar_thump')}if(z.sm<=0){z.sm=0;z.smk=0}return}
+  let ht=S.zs.find(h=>h.hyp&&h.r==z.r&&Math.abs(h.x-z.x)<.75);
+  if(ht){if(z.t==7){z.sm=SMD;z.smk=0;z.sp=ht.id;z.spz=1;z.e=1}else{z.e=1;ht.hp-=10*dt*(z.sl>0?.5:1)}return}
   let p=S.pl.find(p=>p.r==z.r&&p.c<z.x&&p.c+.75>z.x-.1&&(PD[p.t][5]!='spike'||z.t==7));
   if(p){let pk=PD[p.t][5];
-   if(z.t==7){z.sm=SMD;z.smk=0;z.sp=p.id;z.e=1}
+   if(z.t==7){z.sm=SMD;z.smk=0;z.sp=p.id;z.spz=0;z.e=1}
    else if(z.t==5&&!z.jd&&pk!='tall'){z.jd=1;z.x=p.c-.3;ev('groan')}
    else if(pk=='garlic'){z.e=1;z.gb=(z.gb||0)+dt;if(z.gb>=.6){z.gb=0;p.hp-=8;ev('chompsoft');let o=[];if(z.r>0)o.push(z.r-1);if(z.r<4)o.push(z.r+1);z.r0=z.r;z.r=o[Math.floor(Math.random()*o.length)];z.ls=.45;z.e=0}}
+   else if(pk=='hypno'&&z.t!=7){z.hyp=1;z.e=0;p.hp=0;ev('reverse_explosion')}
    else{z.e=1;p.hp-=10*dt*(z.sl>0?.5:1);if(S.es<=0){S.es=.45;ev('chompsoft')}}}
   else{z.e=0;z.x-=(z.t==4&&z.ah<=0?.65:ZD[z.t][3])*dt*(z.sl?.5:1)}
   if(z.x<0)S.over=2});
- S.pl=S.pl.filter(p=>p.hp>0);S.zs=S.zs.filter(z=>{if(z.hp>0)return 1;if(z.t==7)ev('gargantuar_death');if(!z.nf)S.fx.push({id:++S.id,k:zu(z),t:z.t,an:'death',x:OX+z.x*CW,y:OY+(z.r+1)*RH-4,r:z.r,a:0});return 0});S.fx.forEach(f=>f.a+=dt);S.fx=S.fx.filter(f=>f.a<(f.an=='death'?(f.t==7?4.8:3.3):f.an=='hat'?1.4:1.6));S.gs=S.gs.filter(g=>g.hp>0);if(S.t>=300&&!S.over)S.over=1}
+ S.pl=S.pl.filter(p=>p.hp>0);S.zs=S.zs.filter(z=>{if(z.hyp&&z.x>11.6)return 0;if(z.hp>0)return 1;if(z.t==7)ev('gargantuar_death');if(!z.nf)S.fx.push({id:++S.id,k:zu(z),t:z.t,hyp:z.hyp?1:0,an:'death',x:OX+z.x*CW,y:OY+(z.r+1)*RH-4,r:z.r,a:0});return 0});S.fx.forEach(f=>f.a+=dt);S.fx=S.fx.filter(f=>f.a<(f.an=='death'?(f.t==7?4.8:3.3):f.an=='hat'?1.4:1.6));S.gs=S.gs.filter(g=>g.hp>0);if(S.t>=300&&!S.over)S.over=1}
 const K=1.5,cx=$('cv').getContext('2d');
-const li=n=>{let m=new Image();m.src='assets/'+n;return m},AT=li('atlas.png?v=20261030a'),AT2=li('atlas2.webp?v=20261030a'),HT={hat_cone:li('hat_cone.png'),hat_bucket:li('hat_bucket.png'),hat_helmet:li('hat_helmet.png'),hat_paper:li('hat_paper.png')},HD={z0:li('zh.png'),z3:li('zfh.png'),z5:li('zph.png')},GR=li('grave.png'),BR=li('brain.png'),P1=li('pea.png'),P2=li('spea.png');
+const li=n=>{let m=new Image();m.src='assets/'+n;return m},AT=li('atlas.png?v=20261101a'),AT2=li('atlas2.webp?v=20261101a'),HT={hat_cone:li('hat_cone.png'),hat_bucket:li('hat_bucket.png'),hat_helmet:li('hat_helmet.png'),hat_paper:li('hat_paper.png')},HD={z0:li('zh.png'),z3:li('zfh.png'),z5:li('zph.png')},GR=li('grave.png'),BR=li('brain.png'),P1=li('pea.png'),P2=li('spea.png');
 const tcv=document.createElement('canvas');tcv.width=340;tcv.height=300;const tcx=tcv.getContext('2d');
-function tint(k,an,tt,x,y,once){tcx.clearRect(0,0,340,300);dr(tcx,k,an,tt,170,250,K,once);tcx.globalCompositeOperation='source-atop';tcx.fillStyle='rgba(60,150,255,.45)';tcx.fillRect(0,0,340,300);tcx.globalCompositeOperation='source-over';cx.drawImage(tcv,x-170,y-250)}
-function dr(c,k,an,t,x,y,sc,once){let u=ANIM[k],f=u&&u.a[an];if(!f)return;let i=Math.max(0,Math.floor(t*((u.fp&&u.fp[an])||u.fps))||0),F=f[once?Math.min(i,f.length-1):i%f.length];sc=sc||K;if(!F)return;for(const l of F){let r=ATL[l[0]],im=r[4]?AT2:AT;if(!im.naturalWidth)continue;c.globalAlpha=l[7];c.setTransform(l[1]*sc,l[2]*sc,l[3]*sc,l[4]*sc,x+(l[5]-u.ax)*sc,y+(l[6]-u.ay)*sc);c.drawImage(im,r[0],r[1],r[2],r[3],-APAD,-APAD,r[2],r[3])}c.setTransform(1,0,0,1,0,0);c.globalAlpha=1}
+function tint(k,an,tt,x,y,once,col,flip){tcx.clearRect(0,0,340,300);dr(tcx,k,an,tt,170,250,K,once,flip);tcx.globalCompositeOperation='source-atop';tcx.fillStyle=col||'rgba(60,150,255,.45)';tcx.fillRect(0,0,340,300);tcx.globalCompositeOperation='source-over';cx.drawImage(tcv,x-170,y-250)}
+function dr(c,k,an,t,x,y,sc,once,flip){let u=ANIM[k],f=u&&u.a[an];if(!f)return;let i=Math.max(0,Math.floor(t*((u.fp&&u.fp[an])||u.fps))||0),F=f[once?Math.min(i,f.length-1):i%f.length];sc=sc||K;if(!F)return;for(const l of F){let r=ATL[l[0]],im=r[4]?AT2:AT;if(!im.naturalWidth)continue;c.globalAlpha=l[7];if(flip)c.setTransform(-l[1]*sc,l[2]*sc,-l[3]*sc,l[4]*sc,x-(l[5]-u.ax)*sc,y+(l[6]-u.ay)*sc);else c.setTransform(l[1]*sc,l[2]*sc,l[3]*sc,l[4]*sc,x+(l[5]-u.ax)*sc,y+(l[6]-u.ay)*sc);c.drawImage(im,r[0],r[1],r[2],r[3],-APAD,-APAD,r[2],r[3])}c.setTransform(1,0,0,1,0,0);c.globalAlpha=1}
 bd.addEventListener('click',e=>{if(!S||S.over)return;let r=bd.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*1080,y=(e.clientY-r.top)/r.height*608,s=S.su.find(o=>Math.hypot(o.x-x,o.y-y)<(window.matchMedia&&matchMedia('(pointer:coarse)').matches?56:34));
- if(!s)return;e.stopPropagation();if(s.k=='brain'){if(role=='g'){conn.send({pk:s.id});snd('sun')}}else if(role=='h'){S.su=S.su.filter(o=>o.id!=s.id);S.sun+=25;snd('sun')}},true);
+ if(!s)return;e.stopPropagation();if(s.k=='brain'){if(role=='g'){TX({pk:s.id});snd('sun')}}else if(role=='h'){S.su=S.su.filter(o=>o.id!=s.id);S.sun+=25;snd('sun')}},true);
 function draw(){let t=performance.now()/1e3;cx.clearRect(0,0,1080,608);let L=[];
  S.gs.forEach(g=>L.push([g.r*2,()=>cx.drawImage(GR,OX+(g.c+.5)*CW-36,OY+(g.r+1)*RH-GR.height*1.2-4,72,GR.height*1.2)]));
  S.pl.forEach(p=>{let k=PD[p.t][3],an=k=='wn'?(p.hp>200?'idle1':p.hp>100?'idle2':'idle3'):k=='ga'?(p.hp>26.7?'idle':p.hp>13.3?'d1':'d2'):k=='tn'?(p.hp>400?'idle':p.hp>200?'d1':'d2'):'idle',tt=t+p.id*.37,once=0,px=OX+(p.c+.5)*CW,dy=0;
@@ -121,10 +129,10 @@ function draw(){let t=performance.now()/1e3;cx.clearRect(0,0,1080,608);let L=[];
    else{let e=p.ph==2?.5-p.pt:p.ph==3?.5+.35-p.pt:.85;px+=(OX+p.tx*CW-px)*Math.min(1,e/.85);dy=-85*Math.sin(Math.PI*Math.min(1,e/.85));an=p.ph==2?'jumpup':'jumpdown';tt=p.ph==2?(.5-p.pt)*f('jumpup')/.5:p.ph==3?(.35-p.pt)*f('jumpdown')/.35:99}}
   L.push([p.r*2+1,()=>dr(cx,k,an,tt,px,OY+(p.r+1)*RH-8+dy,K,once)])});
  S.zs.forEach(z=>{let k=zu(z),an=z.e?'eat':z.t==5&&!z.jd?'run':'walk',tt=(z.ap||0)+z.id*.3,once=0,X=OX+z.x*CW,Y=OY+(z.r+(z.ls>0?(z.r0-z.r)*z.ls/.45:0)+1)*RH-4;if(z.t==4&&z.ah<=0&&z.gs>0){an='gasp';tt=1.2-z.gs;once=1}if(z.t==7&&z.sm>0){an='eat';tt=SMD-z.sm;once=1}
-  L.push([z.r*2+1,()=>z.sl>0?tint(k,an,tt,X,Y,once):dr(cx,k,an,tt,X,Y,K,once)])});
+  L.push([z.r*2+1,()=>z.hyp?tint(k,an,tt,X,Y,once,'rgba(170,60,220,.55)',1):z.sl>0?tint(k,an,tt,X,Y,once):dr(cx,k,an,tt,X,Y,K,once)])});
  S.fx.forEach(f=>{if(f.an=='hat'){let m=HT[f.img],a=f.a,y=Math.min(f.y-120*a+520*a*a,f.y+92);L.push([f.r*2+2,()=>{if(!m.naturalWidth)return;cx.save();cx.globalAlpha=Math.min(1,(1.4-a)/.4);cx.translate(f.x+a*45,y);cx.rotate(a*4);cx.drawImage(m,-m.naturalWidth*K/2,-m.naturalHeight*K/2,m.naturalWidth*K,m.naturalHeight*K);cx.restore()}]);return}
-  L.push([f.r*2+1,()=>dr(cx,f.k,f.an,f.a,f.x,f.y,K,1)]);
-  if(f.an=='death'&&f.t!=7){let a=Math.min(f.a,.7)/.7,h=HD['z'+f.t]||HD.z0,w=h.naturalWidth*K,q=h.naturalHeight*K;L.push([f.r*2+2,()=>{cx.save();cx.translate(f.x-6-a*16,f.y-92+a*a*80);cx.rotate(-a*1.8);cx.drawImage(h,-w/2,-q/2,w,q);cx.restore()}])}});
+  L.push([f.r*2+1,()=>f.hyp?tint(f.k,f.an,f.a,f.x,f.y,1,'rgba(170,60,220,.55)',1):dr(cx,f.k,f.an,f.a,f.x,f.y,K,1)]);
+  if(f.an=='death'&&f.t!=7){let a=Math.min(f.a,.7)/.7,h=HD['z'+f.t]||HD.z0,sm=f.t==8?.65:1,w=h.naturalWidth*K*sm,q=h.naturalHeight*K*sm;L.push([f.r*2+2,()=>{cx.save();cx.translate(f.x-6-a*16,f.y-92*sm+a*a*80*sm);cx.rotate(-a*1.8);cx.drawImage(h,-w/2,-q/2,w,q);cx.restore()}])}});
  S.ps.forEach(q=>L.push([50,()=>cx.drawImage(q.s?P2:P1,OX+q.x*CW-14,OY+q.r*RH+RH*.42,28,28)]));
  L.sort((a,b)=>a[0]-b[0]);L.forEach(o=>{try{o[1]()}catch(e){rep(e)}});
  S.su.forEach(q=>{if(q.k=='brain')cx.drawImage(BR,q.x-22,q.y-20+Math.sin(t*4+q.id)*3,44,42);else dr(cx,'sun','idle',t,q.x,q.y)});
@@ -139,40 +147,51 @@ function rend(){let h=role=='h';
  $('sl').querySelectorAll('button').forEach(b=>b.onclick=()=>{pick.splice(+b.dataset.r,1);rend()});$('pn').textContent=pick.length+'/5 seeds'}
 function choose(){$('lob').style.display='none';$('pk').style.display='flex';pool=role=='h'?PD:ZD;pick=[role=='h'?0:6];
  $('pt').textContent=role=='h'?'Choose your plants':'Choose your zombies';rend();
- $('rd').onclick=()=>{if(!pick.length||rdy)return;rdy=1;$('rd').textContent='Waiting for opponent…';if(role=='g')conn.send({rd:1});else if(orr)start()}}
+ $('rd').onclick=()=>{if(!pick.length||rdy)return;rdy=1;$('rd').textContent='Waiting for opponent…';if(role=='g'){TX({rd:1});let rt=setInterval(()=>{if(S||left1)clearInterval(rt);else TX({rd:1})},1000)}else if(orr&&!S)start()}}
 function start(){keepAwake();mus('lawn');snd('readysetplant');$('lob').style.display='none';$('pk').style.display='none';let h=role=='h',P=h?PD:ZD;
  $('hud').innerHTML=`<div id=cb><span id=ic>${h?'<i class=sunic></i>':'🧠'}</span><b id=v>0</b></div>`+pick.map(i=>`<button class="k p" data-i=${i}>${cardH(P[i],h)}</button>`).join('')+(h?'<button class="k sv" id=sv title="Shovel"><svg width=40 height=60 viewBox="0 0 40 60"><rect x=17 y=2 width=6 height=30 rx=3 fill=#c9965a stroke=#4a2b11 transform="rotate(-18 20 30)"/><path d="M6 36 L30 30 L34 52 L12 56 Z" fill=#b9c1ca stroke=#454b53 stroke-width=2 transform="rotate(-18 20 40)"/></svg></button>':'')+'<span id=t></span>';
  document.querySelectorAll('.k.p').forEach(b=>b.onclick=()=>sel=+b.dataset.i);if(h)$('sv').onclick=()=>sel=-2;
- if(!h)(function G(){requestAnimationFrame(G);try{draw()}catch(e){rep(e)}})();if(h){S={t:0,sun:150,br:100,pl:[],zs:[],ps:[],su:[],gs:[],id:0,sk:2,over:0,cd:{},ev:[],fx:[]};let last=performance.now(),ls=0;
-  (function L(n){requestAnimationFrame(L);try{tick(Math.min(.1,(n-last)/1e3));last=n;draw()}catch(e){last=n;rep(e)}if(n-ls>50||S.over){ls=n;try{conn.send({s:S})}catch(e){rep(e)}S.ev=[]}})(last)}}
-function setup(c){conn=c;c.on('data',d=>{if(role=='h'){if(d.rd){orr=1;if(rdy)start()}else if(d.z!=null&&S)zin(d.z,d.r,d.c);else if(d.pk!=null&&S){let q=S.su.find(o=>o.id==d.pk&&o.k=='brain');if(q){S.su=S.su.filter(o=>o!=q);S.br+=25;ev('sun')}}}else if(d.s){S=d.s;S.ev.forEach(snd);if(!$('v'))start()}});
- c.on('close',()=>{$('pk').style.display='none';$('lob').style.display='flex';$('lob').innerHTML='<div><h1>Opponent left</h1><button class=k onclick=location.reload()>Back</button></div>'});
- c.open?choose():c.on('open',choose)}
-// ---- Network: STUN + TURN relay servers so players behind strict routers/NAT can still connect.
-// To use your own relay (more reliable), replace the TURN entries below with the iceServers from a free
-// account at metered.ca (or any TURN provider).
+ if(!h)(function G(){requestAnimationFrame(G);try{draw()}catch(e){rep(e)}})();if(h){S={t:0,sun:150,br:100,pl:[],zs:[],ps:[],su:[],gs:[],id:0,sk:2,over:0,cd:Object.assign({},...PD.map((d,i)=>d[4]>=14?{[i]:d[4]/2}:{}),...ZD.map((d,i)=>d[5]>=9?{['z'+i]:d[5]/2}:{})),ev:[],fx:[]};let last=performance.now(),ls=0;
+  (function L(n){requestAnimationFrame(L);try{tick(Math.min(.1,(n-last)/1e3));last=n;draw()}catch(e){last=n;rep(e)}if(n-ls>50||S.over){ls=n;try{if(TX({s:S}))S.ev=[]}catch(e){rep(e)}}})(last)}}
+// ---- Network: instant relay (MQTT over WebSocket) + direct WebRTC link that takes over when it connects ----
+// Relay: public anonymous MQTT brokers (all tried at once). Direct: PeerJS with STUN+TURN servers.
 const ICE=[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'},{urls:'stun:global.stun.twilio.com:3478'},
  {urls:['turn:openrelay.metered.ca:80','turn:openrelay.metered.ca:443','turn:openrelay.metered.ca:443?transport=tcp','turns:openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'}];
 const PO={config:{iceServers:ICE,iceCandidatePoolSize:4}};
-$('h').onclick=()=>{mus('seed');role='h';$('st').textContent='Creating room…';let id=Math.random().toString(36).slice(2,6),p=new Peer('pvzvs-'+id,PO);
- p.on('open',()=>$('st').textContent='Room code: '+id.toUpperCase()+' — give it to your opponent and wait…');p.on('connection',setup);
- p.on('disconnected',()=>{try{p.reconnect()}catch(e){}});
- p.on('error',e=>$('st').textContent=e.type=='unavailable-id'?'Room code clash - click Host again.':'Error: '+e.type+' (check your internet and try again)')};
-$('j').onclick=()=>{mus('seed');role='g';let code=$('code').value.trim().toLowerCase();if(!code){$('st').textContent='Type the room code first.';return}
- $('st').textContent='Contacting matchmaking server…';let p=new Peer(PO),done=0,t2;
- const fail=m=>{if(done)return;done=1;clearTimeout(t1);clearTimeout(t2);$('st').textContent=m;try{p.destroy()}catch(e){}};
- let t1=setTimeout(()=>fail('Cannot reach the matchmaking server. Check your internet and click Join again.'),12000);
- p.on('open',()=>{clearTimeout(t1);$('st').textContent='Connecting to host…';let c=p.connect('pvzvs-'+code,{reliable:true});
-  t2=setTimeout(()=>fail('Could not connect (blocked network or wrong code). Ask the host to refresh and host again, then click Join again.'),30000);
-  c.on('open',()=>{done=1;clearTimeout(t2)});c.on('error',e=>fail('Connection error: '+e));setup(c)});
- p.on('error',e=>fail(e.type=='peer-unavailable'?'Room not found - check the code (the host must still be waiting).':'Error: '+e.type+' - click Join to retry.'))};
+const MQURL=['wss://broker.emqx.io:8084/mqtt','wss://broker.hivemq.com:8884/mqtt','wss://test.mosquitto.org:8081'];
+const RND=(k,v)=>typeof v=='number'?Math.round(v*100)/100:v;
+let code='',paired=0,rtc=null,MQ=[],ai=-1,lastRx=0,lastMq=0,left1=0;
+function mqStart(){MQ.forEach(m=>{try{m.c.end(true)}catch(e){}});MQ=[];if(typeof mqtt=='undefined')return;
+ MQURL.forEach((u,i)=>{try{let c=mqtt.connect(u,{reconnectPeriod:3000,connectTimeout:6000,clean:true,clientId:'pvz'+Math.random().toString(36).slice(2,10)});MQ[i]={c,ok:0};
+  c.on('connect',()=>{MQ[i].ok=1;c.subscribe('pvzvs/'+code+'/'+(role=='h'?'g':'h'));if(role=='g'&&!paired)mqPub({hi:1},i)});c.on('close',()=>{MQ[i].ok=0});c.on('error',()=>{});
+  c.on('message',(t,m)=>{let d;try{d=JSON.parse(m.toString())}catch(e){return}onData(d,i)})}catch(e){}})}
+const mqPub=(o,i)=>{let m=MQ[i];if(m&&m.ok)m.c.publish('pvzvs/'+code+'/'+role,JSON.stringify(o,RND))};
+function TX(o){if(rtc&&rtc.open){try{rtc.send(o)}catch(e){}return true}
+ if(ai>=0){if(o.s){let n=performance.now();if(n-lastMq<110)return false;lastMq=n}mqPub(o,ai);return true}return false}
+function pair(){if(paired)return;paired=1;lastRx=performance.now();choose()}
+function leave(){if(left1)return;left1=1;$('pk').style.display='none';$('lob').style.display='flex';$('lob').innerHTML='<div><h1>Opponent left</h1><button class=k onclick=location.reload()>Back</button></div>'}
+function onData(d,i){lastRx=performance.now();
+ if(d.hi){if(role=='h'){if(i!=null&&(!paired||ai==i)){if(!paired){ai=i;pair()}mqPub({hi:2},i)}}else if(d.hi==2&&!paired&&i!=null){ai=i;pair()}return}
+ if(d.hb)return;
+ if(role=='h'){if(d.rd){orr=1;if(rdy&&!S)start()}else if(d.z!=null&&S)zin(d.z,d.r,d.c);else if(d.pk!=null&&S){let q=S.su.find(o=>o.id==d.pk&&o.k=='brain');if(q){S.su=S.su.filter(o=>o!=q);S.br+=25;ev('sun')}}}
+ else if(d.s){S=d.s;S.ev.forEach(snd);if(!$('v'))start()}}
+const rtcHook=c=>{const up=()=>{rtc=c;if(!paired)pair()};c.on('open',up);if(c.open)up();c.on('data',d=>onData(d));c.on('close',()=>{if(rtc===c)rtc=null;if(ai<0)leave()});c.on('error',()=>{})};
+setInterval(()=>{if(!paired||(S&&S.over))return;TX({hb:1});if(performance.now()-lastRx>12000)leave()},2000);
+$('h').onclick=()=>{mus('seed');role='h';code=Math.random().toString(36).slice(2,6);paired=0;
+ $('st').textContent='Room code: '+code.toUpperCase()+' — give it to your opponent and wait…';mqStart();
+ if(typeof Peer!='undefined'){try{let p=new Peer('pvzvs-'+code,PO);p.on('connection',rtcHook);p.on('disconnected',()=>{try{p.reconnect()}catch(e){}});p.on('error',()=>{})}catch(e){}}};
+$('j').onclick=()=>{mus('seed');role='g';code=$('code').value.trim().toLowerCase();if(!code){$('st').textContent='Type the room code first.';return}
+ paired=0;$('st').textContent='Connecting…';mqStart();
+ let hi=setInterval(()=>{if(paired){clearInterval(hi);return}MQ.forEach((m,i)=>mqPub({hi:1},i))},700);
+ if(typeof Peer!='undefined'){try{let p=new Peer(PO);p.on('open',()=>rtcHook(p.connect('pvzvs-'+code,{reliable:true})));p.on('error',()=>{})}catch(e){}}
+ setTimeout(()=>{if(!paired){clearInterval(hi);$('st').textContent='Could not connect - check the room code, make sure the host is still waiting, then click Join again.'}},25000)};
 
 const HP=["Howdy, neighbor! I'm Crazy Dave. This is a two-player fight: one of you plants, the other one brings the zombies!",
 "The goal: the plant player must hold out for 5 minutes. The zombie player wins by getting any zombie across the lawn and into the house!",
 "Plant player: click falling sun to collect it. Pick a seed from the top bar, then click a lawn tile to plant it. Sunflowers pop out extra sun for you to click, and every seed needs a moment to recharge.",
 "Zombie player: you earn brains over time. Pick a zombie, then click the row where you want it to walk in. Gravestones are your sunflowers! Put them on any free tile and they pop out brains - click the brains to collect them!",
-"Plant tips: Cherry Bombs blast zombies - and gravestones! A Chomper eats one zombie and then chews for 30 seconds before it can eat again. Squash jumps on a zombie that gets close on either side of it. Puff-shrooms are free but short range. Wall-nuts stall zombies. Snow Peas slow them down. Use the shovel to dig up a plant you don't want. Garlic makes a zombie swerve into the next lane after one bite. Spikeweed hurts zombies that walk over it. Tall-nuts can't be jumped by Pole Vaulters.",
-"Zombie tips: Pole Vaulters hop over the first plant. Footballs are fast and tough. Cones and buckets crack and fall off when shot. Tear a Newspaper Zombie's paper and it goes berserk and sprints! Rush one lane while the plants are busy, and keep a few gravestones going for brains! The Gargantuar smashes any plant in one hit and Chompers can't eat it, so send it when their defenses are thin.",
+"Plant tips: Cherry Bombs blast zombies - and gravestones! A Chomper eats one zombie and then chews for 30 seconds before it can eat again. Squash jumps on a zombie that gets close on either side of it. Puff-shrooms are free but short range. Wall-nuts stall zombies. Snow Peas slow them down. Use the shovel to dig up a plant you don't want. Garlic makes a zombie swerve into the next lane after one bite. Spikeweed hurts zombies that walk over it. Tall-nuts can't be jumped by Pole Vaulters. A Grave Digger only goes on a gravestone and digs it up in 5 seconds. A zombie that bites a Hypno-shroom turns purple and fights for the plants (except the Gargantuar)!",
+"Zombie tips: Pole Vaulters hop over the first plant. Footballs are fast and tough. Cones and buckets crack and fall off when shot. Tear a Newspaper Zombie's paper and it goes berserk and sprints! Rush one lane while the plants are busy, and keep a few gravestones going for brains! The Gargantuar smashes any plant in one hit and Chompers can't eat it, so send it when their defenses are thin. Imps are small, fast and fragile.",
 "Before the match you each pick up to 5 seeds, then hit Ready. Share your room code with a friend to play online. The match keeps running while you read this, so be quick, neighbor!",
 "That's it! Go protect your brains... or go eat them! You can open me again any time with the Help button."];
 let hi=0,dvx=$('dv').getContext('2d');(function D(){if($('hp').style.display=='flex'){dvx.clearRect(0,0,300,430);dr(dvx,'dave','talk',performance.now()/1e3,150,420,.95)}requestAnimationFrame(D)})();

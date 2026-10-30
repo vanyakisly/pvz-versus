@@ -32,3 +32,9 @@ Mobile: works in landscape on phones/tablets (portrait shows a "rotate" prompt).
  - Sound: the first tap unlocks audio (required by iOS/Android). Sound effects use WebAudio so they play reliably on phones.
  - Fullscreen button (top-right) on Android/iPad; on iPhone use Share > Add to Home Screen for a full-screen app (manifest + icons included).
  - The screen stays awake during a match where the browser allows it.
+Connection: players now connect through an instant relay (public MQTT brokers over WebSocket, assets/mqtt.min.js) and the game upgrades to a direct WebRTC link (assets/peerjs.min.js) if one succeeds. Both libraries are bundled (no CDN needed).
+Balance: longer seed cooldowns (see the table in the chat message); heavy seeds (cooldown >= 9-14s) start half-charged.
+Added (from new_zombies_and_plants.zip; frames extracted into assets/atlas2.webp, no GIFs at runtime):
+ Grave Digger (plant, 75 sun, 16s): only on a gravestone; digs it up in 5s then disappears; zombies can eat it meanwhile; removed if its gravestone is destroyed.
+ Hypno-shroom (plant, 100 sun, 24s): a zombie that bites it turns purple, faces right and fights enemy zombies in the same lane (Gargantuar is immune and just smashes it); plant weapons ignore hypnotized zombies.
+ Imp (zombie, 25 brains, 3s): small, 10 hp, speed 0.3 (normal 0.2).
