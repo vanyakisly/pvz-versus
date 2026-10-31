@@ -38,3 +38,9 @@ Added (from new_zombies_and_plants.zip; frames extracted into assets/atlas2.webp
  Grave Digger (plant, 75 sun, 16s): only on a gravestone; digs it up in 5s then disappears; zombies can eat it meanwhile; removed if its gravestone is destroyed.
  Hypno-shroom (plant, 100 sun, 24s): a zombie that bites it turns purple, faces right and fights enemy zombies in the same lane (Gargantuar is immune and just smashes it); plant weapons ignore hypnotized zombies.
  Imp (zombie, 25 brains, 3s): small, 10 hp, speed 0.3 (normal 0.2).
+Modes (lobby): 
+ - Versus (online): host plays Plants, joiner plays Zombies.
+ - Co-op (online): pick "Co-op" above Host Game; both players plant together (shared sun and seed cooldowns) against computer zombies.
+ - Single Player: play Plants (computer sends zombies) or Zombies (computer plants). Works offline.
+Settings: round length only (1-15 minutes, saved in the browser). Online, the host's round length is used.
+The computer players follow the same costs, cooldowns and rules as a human.
