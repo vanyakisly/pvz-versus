@@ -44,3 +44,12 @@ Modes (lobby):
  - Single Player: play Plants (computer sends zombies) or Zombies (computer plants). Works offline.
 Settings: round length only (1-15 minutes, saved in the browser). Online, the host's round length is used.
 The computer players follow the same costs, cooldowns and rules as a human.
+Performance (for weak devices):
+ - Each character animation frame is composed once into a bitmap and reused (1 draw call per character instead of 15-30); the bitmap cache has a memory limit chosen from the device's RAM (20-56 MB).
+ - Chilled/hypnotized tints are cached too (they used to be recomputed every frame).
+ - Automatic frame pacing: if the device can't keep up, the game draws every 2nd/3rd frame while the game logic keeps full speed.
+ - The seed bar/timer update ~9 times a second and only when something changed; the game-over screen is built once; sounds can't pile up; Crazy Dave's animation only runs while Help is open; Gargantuar frames are stored at 75% size.
+New online modes (pick one in the lobby's mode menu before pressing Host Game; the joiner is placed automatically):
+ - Plants vs Plants: both plant. Own planting zone (host cols 1-5, guest cols 5-9). Shooters fire toward the enemy; peas hit enemy plants (3x damage vs plants), Snow Pea chills enemy plants, Cherry Bomb/Squash/Chomper work on enemy plants. Each side has 3 goal nuts (1800 hp = 3x a Tall-nut): your nuts are green, the enemy's red. Destroy all 3 to win; at time-up the side with more nut health wins. Roster: Sunflower, Peashooter, Repeater, Snow Pea, Puff-shroom, Wall-nut, Tall-nut, Cherry Bomb, Squash, Chomper.
+ - Zombies vs Zombies: both play zombies with their own brain bank, cooldowns and gravestones (own half). The host leads the purple zombies (full health/armor) from the left, the joiner the normal zombies from the right. Zombies fight when they meet; first zombie to cross the other side wins; at time-up the side whose zombie advanced farther wins.
+ - Co-op: Zombies vs computer: both play zombies (shared brains) against computer plants (stronger than in single player).
