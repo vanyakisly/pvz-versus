@@ -53,3 +53,8 @@ New online modes (pick one in the lobby's mode menu before pressing Host Game; t
  - Plants vs Plants: both plant. Own planting zone (host cols 1-5, guest cols 5-9). Shooters fire toward the enemy; peas hit enemy plants (3x damage vs plants), Snow Pea chills enemy plants, Cherry Bomb/Squash/Chomper work on enemy plants. Each side has 3 goal nuts (1800 hp = 3x a Tall-nut): your nuts are green, the enemy's red. Destroy all 3 to win; at time-up the side with more nut health wins. Roster: Sunflower, Peashooter, Repeater, Snow Pea, Puff-shroom, Wall-nut, Tall-nut, Cherry Bomb, Squash, Chomper.
  - Zombies vs Zombies: both play zombies with their own brain bank, cooldowns and gravestones (own half). The host leads the purple zombies (full health/armor) from the left, the joiner the normal zombies from the right. Zombies fight when they meet; first zombie to cross the other side wins; at time-up the side whose zombie advanced farther wins.
  - Co-op: Zombies vs computer: both play zombies (shared brains) against computer plants (stronger than in single player).
+Economy balance (v20261105a): sky sun falls every 10s (was 6s); sunflowers make sun every 11s (was 8s); zombies start with 150 brains (was 100).
+ Measured with a perfect-clicking, no-spending simulation on equal tiles, income ratio zombies/plants went from 0.70/0.68/0.82/0.88 (at 60/120/180/300s) to about 1.01/0.96/1.14/1.22.
+Imp: cost 40 brains (was 25), 7 hp (was 10), speed 0.27 (was 0.30), cooldown 7s (was 3s).
+Computer players re-tuned so single player stays about as hard as before (computer plants get an income bonus because they also lost sky sun).
+Tuning knobs for these numbers live in the ECO and AIC constants in index.html.
