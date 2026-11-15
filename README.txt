@@ -33,6 +33,7 @@ Mobile: works in landscape on phones/tablets (portrait shows a "rotate" prompt).
  - Fullscreen button (top-right) on Android/iPad; on iPhone use Share > Add to Home Screen for a full-screen app (manifest + icons included).
  - The screen stays awake during a match where the browser allows it.
 Connection: players now connect through an instant relay (public MQTT brokers over WebSocket, assets/mqtt.min.js) and the game upgrades to a direct WebRTC link (assets/peerjs.min.js) if one succeeds. Both libraries are bundled (no CDN needed).
+Voice chat: Host Game and Join Game request microphone permission and start a private PeerJS/WebRTC audio call when the direct peer connection opens. Use the microphone button to mute/unmute yourself and the headphones button to mute/unmute incoming voice. If microphone permission is blocked, you can still listen. Voice stops automatically when the opponent leaves or the page closes. Microphone access requires HTTPS or localhost in modern browsers.
 Balance: longer seed cooldowns (see the table in the chat message); heavy seeds (cooldown >= 9-14s) start half-charged.
 Added (from new_zombies_and_plants.zip; frames extracted into assets/atlas2.webp, no GIFs at runtime):
  Grave Digger (plant, 75 sun, 16s): only on a gravestone; digs it up in 5s then disappears; zombies can eat it meanwhile; removed if its gravestone is destroyed.
