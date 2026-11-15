@@ -59,3 +59,20 @@ Economy balance (v20261105a): sky sun falls every 10s (was 6s); sunflowers make 
 Imp: cost 40 brains (was 25), 7 hp (was 10), speed 0.27 (was 0.30), cooldown 7s (was 3s).
 Computer players re-tuned so single player stays about as hard as before (computer plants get an income bonus because they also lost sky sun).
 Tuning knobs for these numbers live in the ECO and AIC constants in index.html.
+
+Boss Raid and complete supplied roster (v20261115boss)
+------------------------------------------------------
+- Added every one of the 49 plants in PvZ_Other_Character_Animations_Final.zip. The original optimized animations remain in use for plants already present; all newly added plants use their supplied rebuilt GIF animation. Repeater remains as an additional fiftieth plant.
+- Added all 17 supplied additional zombie rigs: Screen Door, Flag, Dancing, Disco/Jackson, Balloon, Bobsled, Bungee, Catapult, Digger, Dolphin Rider, Jack-in-the-Box, Ladder, Pogo, Snorkel, Surprise, Yeti and Zomboni.
+- Pool/roof-only characters were adapted to useful five-lane lawn abilities. Signature roles are preserved where the board supports them: Blover clears balloons, Magnet-shroom strips defenses, Ice-shroom freezes the field, Jalapeno clears a lane, Doom-shroom and Cob Cannon deliver heavy damage, Potato Mine arms before exploding, and jumping/vehicle/special zombies retain matching combat traits.
+- The chooser scrolls and uses lightweight thumbnails; full supplied GIFs load only when their character appears on the lawn.
+
+Boss Raid mode:
+1. The host chooses "Boss Raid: unlimited players", presses Host Game, and shares the room code.
+2. Any number of guests can enter that same code. The host starts after at least one guest is ready. There is no coded player cap; practical limits depend on the host browser/network.
+3. Every player fights as Plants with shared sun, shared cooldowns and a shared lawn. There is no time limit.
+4. Zomboss health scales with the number of directly connected players present when the raid starts. Zomboss attacks rows, stomps the lawn and summons increasingly large mixed zombie waves.
+5. Projectiles that reach Zomboss damage him. Cherry Bomb, Jalapeno, Doom-shroom, Potato Mine and Cob Cannon also inflict boss damage. The raid ends when Zomboss is destroyed or a zombie reaches the house.
+6. The supplied Zomboss theme plays for the raid. Supplied boss attack/death animations and the complete miscellaneous sound-effect archive are included under assets/boss and assets/sfx.
+
+Boss multiplayer uses one authoritative host and broadcasts game state to every open PeerJS data connection, with the existing MQTT relay retained as fallback. Late connections receive the current configuration/state. Group voice preserves the earlier microphone/headphone controls: the host can hear all directly connected guests, and each guest can hear the host. Browsers still require HTTPS or localhost for microphone permission.
